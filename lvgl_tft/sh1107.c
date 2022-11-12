@@ -94,8 +94,6 @@ void sh1107_init(void)
 	//Initialize non-SPI GPIOs
         gpio_pad_select_gpio(SH1107_DC);
 	gpio_set_direction(SH1107_DC, GPIO_MODE_OUTPUT);
-
-#if SH1107_USE_RST
         gpio_pad_select_gpio(SH1107_RST);
 	gpio_set_direction(SH1107_RST, GPIO_MODE_OUTPUT);
 
@@ -104,7 +102,6 @@ void sh1107_init(void)
 	vTaskDelay(100 / portTICK_RATE_MS);
 	gpio_set_level(SH1107_RST, 1);
 	vTaskDelay(100 / portTICK_RATE_MS);
-#endif
 
 	//Send all the commands
 	uint16_t cmd = 0;
@@ -127,10 +124,10 @@ void sh1107_set_px_cb(struct _disp_drv_t * disp_drv, uint8_t * buf, lv_coord_t b
     uint8_t  bit_index = 0;
 
 #if defined CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE
-	byte_index = y + (( x>>3 ) * LV_VER_RES_MAX);
+	byte_index = y + (( x>>3 ) * LV_VER_RES);
 	bit_index  = x & 0x7;
 #elif defined CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT
-    byte_index = x + (( y>>3 ) * LV_HOR_RES_MAX);
+    byte_index = x + (( y>>3 ) * LV_HOR_RES);
     bit_index  = y & 0x7;
 #endif
 
@@ -162,9 +159,9 @@ void sh1107_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * colo
 	    sh1107_send_cmd(0xB0 | i);                  // Set Page Start Address for Page Addressing Mode
 	    size = area->y2 - area->y1 + 1;
 #if defined CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE
-        ptr = color_map + i * LV_VER_RES_MAX;
+        ptr = color_map + i * LV_VER_RES;
 #else
-        ptr = color_map + i * LV_HOR_RES_MAX;
+        ptr = color_map + i * LV_HOR_RES;
 #endif
         if(i != row2){
 	    sh1107_send_data( (void *) ptr, size);
@@ -180,8 +177,8 @@ void sh1107_rounder(struct _disp_drv_t * disp_drv, lv_area_t *area)
     // workaround: always send complete size display buffer
     area->x1 = 0;
     area->y1 = 0;
-    area->x2 = LV_HOR_RES_MAX-1;
-    area->y2 = LV_VER_RES_MAX-1;
+    area->x2 = LV_HOR_RES-1;
+    area->y2 = LV_VER_RES-1;
 }
 
 void sh1107_sleep_in()

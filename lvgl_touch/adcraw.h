@@ -38,16 +38,16 @@ extern "C" {
 	
 /*GetMaxX Macro*/
 #if CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE
-#define GetMaxX()   (LV_HOR_RES_MAX - 1)
+#define GetMaxX()   (LV_HOR_RES - 1)
 #else
-#define GetMaxX()   (LV_VER_RES_MAX - 1)
+#define GetMaxX()   (LV_VER_RES - 1)
 #endif
 
 /*GetMaxY Macro*/
 #if CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE
-#define GetMaxY()   (LV_VER_RES_MAX - 1)
+#define GetMaxY()   (LV_VER_RES - 1)
 #else
-#define GetMaxY()   (LV_HOR_RES_MAX - 1)
+#define GetMaxY()   (LV_HOR_RES - 1)
 #endif
 
 #ifndef CONCAT3

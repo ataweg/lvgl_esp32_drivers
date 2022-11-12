@@ -53,40 +53,294 @@ static void ili9481_send_color(void * data, uint16_t length);
 
 void ili9481_init(void)
 {
+//     lcd_init_cmd_t ili_init_cmds[]={
+//         {ILI9481_CMD_SLEEP_OUT, {0x00}, 0x80},
+//         {ILI9481_CMD_POWER_SETTING, {0x07, 0x42, 0x18}, 3},
+//         {ILI9481_CMD_VCOM_CONTROL, {0x00, 0x07, 0x10}, 3},
+//         {ILI9481_CMD_POWER_CONTROL_NORMAL, {0x01, 0x02}, 2},
+//         {ILI9481_CMD_PANEL_DRIVE, {0x10, 0x3B, 0x00, 0x02, 0x11}, 5},
+//         {ILI9481_CMD_FRAME_RATE, {0x03}, 1},
+//         {ILI9481_CMD_FRAME_MEMORY_ACCESS, {0x0, 0x0, 0x0, 0x0}, 4},
+//         // {ILI9481_CMD_DISP_TIMING_NORMAL, {0x10, 0x10, 0x22}, 3},
+//         {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x32, 0x36, 0x45, 0x06, 0x16, 0x37, 0x75, 0x77, 0x54, 0x0C, 0x00}, 12},
+//         {ILI9481_CMD_MEMORY_ACCESS_CONTROL, {0x0A}, 1},
+// #if ILI9481_INVERT_COLORS
+//         {ILI9481_CMD_DISP_INVERSION_ON, {}, 0},
+// #endif
+//         {ILI9481_CMD_COLMOD_PIXEL_FORMAT_SET, {0x66}, 1},
+//         {ILI9481_CMD_NORMAL_DISP_MODE_ON, {}, 0x80},
+//         {ILI9481_CMD_DISPLAY_ON, {}, 0x80},
+//         {0, {0}, 0xff},
+//     };
+
+//     /* https://github.com/ArtronShop/Adafruit-ILI9481-ESP32-SPI/blob/master/Adafruit_ILI9481_ESP32_SPI.cpp */
+//     lcd_init_cmd_t ili_init_cmds[]={
+//         /* SLP_OUT - Sleep out */
+//         {ILI9481_CMD_SLEEP_OUT, {0x00}, 0x80},
+//         /* Power setting */
+//         {ILI9481_CMD_POWER_SETTING, {0x07, 0x42, 0x18}, 3},
+//         /* VCOM */
+//         {ILI9481_CMD_VCOM_CONTROL, {0x00, 0x07, 0x10}, 3},
+//         /* Power setting for norm. mode */
+//         {ILI9481_CMD_POWER_CONTROL_NORMAL, {0x01, 0x02}, 2},
+//         /* Panel driving setting */
+//         {ILI9481_CMD_PANEL_DRIVE, {0x10, 0x3B, 0x00, 0x00, 0x02, 0x1F/* 0x11 */}, 6},
+//         /* Frame rate & inv. */
+//         {ILI9481_CMD_FRAME_RATE, {0x00/* 0x03 */}, 1},
+
+//         {ILI9481_CMD_FRAME_MEMORY_ACCESS, {0x0, 0x0, 0x0, 0x0}, 4},
+
+//         {ILI9481_CMD_TEARING_EFFECT_LINE_ON, {}, 0},/*  */
+
+//         {ILI9481_CMD_DISP_TIMING_NORMAL, {0x10, 0x10, 0x22}, 3},
+
+//         {ILI9481_CMD_MEMORY_ACCESS_CONTROL, {0x0A}, 1},
+//         /* 上移 */
+//         {ILI9481_CMD_COLMOD_PIXEL_FORMAT_SET, {0x55/* 0x66 */}, 1},
+
+//         // /* 新增两行 */
+//         {ILI9481_CMD_COLUMN_ADDRESS_SET, {0x00, 0x00, 0x01, 0x3F}, 4},
+//         {ILI9481_CMD_PAGE_ADDRESS_SET, {0x00, 0x00, 0x01, 0xE0}, 4},
+
+//         /* Gamma */
+//         {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x32, 0x36, 0x45, 0x06, 0x16, 0x37, 0x75, 0x77, 0x54, 0x0C, 0x00}, 12},
+//         {ILI9481_CMD_MEMORY_ACCESS_CONTROL, {0x0A}, 1},
+// #if ILI9481_INVERT_COLORS
+//         {ILI9481_CMD_DISP_INVERSION_ON, {}, 0},
+// #endif
+//         {ILI9481_CMD_COLMOD_PIXEL_FORMAT_SET, {0x66}, 1},
+//         {ILI9481_CMD_NORMAL_DISP_MODE_ON, {}, 0x80},
+//         {ILI9481_CMD_DISPLAY_ON, {}, 0x80},
+//         {0, {0}, 0xff},
+//     };
+
+//     /* https://github.com/Bodmer/TFT_eSPI/blob/master/TFT_Drivers/ILI9481_Init.h
+//         ILI9481_INIT_2
+//         可以用，消除条纹 
+// 2的备份
+//          */
+//     lcd_init_cmd_t ili_init_cmds[]={
+//         {ILI9481_CMD_SLEEP_OUT, {0x00}, 0x80},
+//         {ILI9481_CMD_POWER_SETTING, {0x07, 0x41, 0x1D/* 0x07, 0x42, 0x18 */}, 3},
+//         {ILI9481_CMD_VCOM_CONTROL, {0x00, 0x2B, 0x1F/* 0x00, 0x07, 0x10 */}, 3},
+//         {ILI9481_CMD_POWER_CONTROL_NORMAL, {0x01, 0x11/* 0x02 */}, 2},
+//         {ILI9481_CMD_PANEL_DRIVE, {0x10, 0x3B, 0x00, 0x02, 0x11}, 5},
+//         {ILI9481_CMD_FRAME_RATE, {0x03}, 1},
+//         {ILI9481_CMD_FRAME_MEMORY_ACCESS, {0x0, 0x0, 0x0, 0x0}, 4},
+//         // {ILI9481_CMD_DISP_TIMING_NORMAL, {0x10, 0x10, 0x22}, 3},
+//         // {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x32, 0x36, 0x45, 0x06, 0x16, 0x37, 0x75, 0x77, 0x54, 0x0C, 0x00}, 12},/* 这个是自带的 */
+//         {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x14, 0x33, 0x10, 0x00, 0x16, 0x44, 0x36, 0x77, 0x00, 0x0F, 0x00}, 12},/* 这个是2的 */
+//         {ILI9481_CMD_ACCESS_PROTECT, {0x00}, 1},
+//         {0xE4, {0xA0}, 1},
+//         {0xF0, {0x01}, 1},
+//         {0xF3, {0x02,0x1A}, 2},
+//         {ILI9481_CMD_MEMORY_ACCESS_CONTROL, {0x0A}, 1},
+// #if ILI9481_INVERT_COLORS
+//         {ILI9481_CMD_DISP_INVERSION_ON, {}, 0},
+// #endif
+//         {ILI9481_CMD_COLMOD_PIXEL_FORMAT_SET, {0x66}, 1},
+//         /* 新增两行 */
+//         {ILI9481_CMD_COLUMN_ADDRESS_SET, {0x00, 0x00, 0x01, 0x3F}, 4},
+//         {ILI9481_CMD_PAGE_ADDRESS_SET, {0x00, 0x00, 0x01, 0xE0}, 4},
+//         {ILI9481_CMD_NORMAL_DISP_MODE_ON, {}, 0x80},
+//         {ILI9481_CMD_DISPLAY_ON, {}, 0x80},
+//         {0, {0}, 0xff},
+//     };
+
+
+        /* https://github.com/Bodmer/TFT_eSPI/blob/master/TFT_Drivers/ILI9481_Init.h
+        ILI9481_INIT_2
+        可以用，消除条纹
+         */
     lcd_init_cmd_t ili_init_cmds[]={
         {ILI9481_CMD_SLEEP_OUT, {0x00}, 0x80},
-        {ILI9481_CMD_POWER_SETTING, {0x07, 0x42, 0x18}, 3},
-        {ILI9481_CMD_VCOM_CONTROL, {0x00, 0x07, 0x10}, 3},
-        {ILI9481_CMD_POWER_CONTROL_NORMAL, {0x01, 0x02}, 2},
+        /* 0xD0 */
+        {ILI9481_CMD_POWER_SETTING, {0x07, 0x41, /* 0x1F */0x1D}, 3},
+        {ILI9481_CMD_VCOM_CONTROL, {0x00, 0x2B, 0x1F}, 3},
+        {ILI9481_CMD_POWER_CONTROL_NORMAL, {0x01, 0x11}, 2},
+        /* 0xC0 */
         {ILI9481_CMD_PANEL_DRIVE, {0x10, 0x3B, 0x00, 0x02, 0x11}, 5},
-        {ILI9481_CMD_FRAME_RATE, {0x03}, 1},
+        {ILI9481_CMD_FRAME_RATE, {0x00/* 0x03 */ /* 最大帧率设为125 */}, 1},
+
+        // {ILI9481_CMD_INTERFACE_CONTROL, {0x82/* 0x83 */}, 1},
+
+        // {ILI9481_CMD_DISP_TIMING_NORMAL, {0x10, 0x10, 0x22}, 3},
+        // {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x32, 0x36, 0x45, 0x06, 0x16, 0x37, 0x75, 0x77, 0x54, 0x0C, 0x00}, 12},/* 这个是自带的 */
+        {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x14, 0x33, 0x10, 0x00, 0x16, 0x44, 0x36, 0x77, 0x00, 0x0F, 0x00}, 12},/* 这个是2的 */
         {ILI9481_CMD_FRAME_MEMORY_ACCESS, {0x0, 0x0, 0x0, 0x0}, 4},
-        //{ILI9481_CMD_DISP_TIMING_NORMAL, {0x10, 0x10, 0x22}, 3},
-        {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x32, 0x36, 0x45, 0x06, 0x16, 0x37, 0x75, 0x77, 0x54, 0x0C, 0x00}, 12},
+        {ILI9481_CMD_ACCESS_PROTECT, {0x00}, 1},
+
+        {0xE4, {0xA0}, 1},
+        {0xF0, {0x01}, 1},
+        {0xF3, {0x02, 0x1A}, 2},
+        
         {ILI9481_CMD_MEMORY_ACCESS_CONTROL, {0x0A}, 1},
 #if ILI9481_INVERT_COLORS
         {ILI9481_CMD_DISP_INVERSION_ON, {}, 0},
 #endif
         {ILI9481_CMD_COLMOD_PIXEL_FORMAT_SET, {0x66}, 1},
+        /* 新增两行 */
+        {ILI9481_CMD_COLUMN_ADDRESS_SET, {0x00, 0x00, 0x01, 0x3F}, 4},
+        {ILI9481_CMD_PAGE_ADDRESS_SET, {0x00, 0x00, 0x01, 0xE0}, 4},
         {ILI9481_CMD_NORMAL_DISP_MODE_ON, {}, 0x80},
         {ILI9481_CMD_DISPLAY_ON, {}, 0x80},
         {0, {0}, 0xff},
     };
 
+
+//         /* https://github.com/Bodmer/TFT_eSPI/blob/master/TFT_Drivers/ILI9481_Init.h
+//         ILI9481_INIT_3
+//         条纹有点明显
+//          */
+//     lcd_init_cmd_t ili_init_cmds[]={
+//         {ILI9481_CMD_SLEEP_OUT, {0x00}, 0x80},
+//         {ILI9481_CMD_POWER_SETTING, {0x07, 0x41, 0x1D/* 0x07, 0x42, 0x18 */}, 3},
+//         {ILI9481_CMD_VCOM_CONTROL, {0x00, 0x2B, 0x1F/* 0x00, 0x07, 0x10 */}, 3},
+//         {ILI9481_CMD_POWER_CONTROL_NORMAL, {0x01, 0x11/* 0x02 */}, 2},
+//         {ILI9481_CMD_PANEL_DRIVE, {0x10, 0x3B, 0x00, 0x02, 0x11}, 5},
+//         {ILI9481_CMD_FRAME_RATE, {0x03}, 1},
+//         {ILI9481_CMD_FRAME_MEMORY_ACCESS, {0x0, 0x0, 0x0, 0x0}, 4},
+//         // {ILI9481_CMD_DISP_TIMING_NORMAL, {0x10, 0x10, 0x22}, 3},
+//         {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x14, 0x33, 0x10, 0x00, 0x16, 0x44, 0x36, 0x77, 0x00, 0x0F, 0x00}, 12},
+//         {ILI9481_CMD_ACCESS_PROTECT, {0x00}, 1},
+//         {0xE4, {0xA0}, 1},
+//         {0xF0, {0x01}, 1},
+//         {0xF3, {0x40, 0x0A/* 0x02, 0x1A */}, 2},
+//         {ILI9481_CMD_MEMORY_ACCESS_CONTROL, {0x0A}, 1},
+// #if ILI9481_INVERT_COLORS
+//         {ILI9481_CMD_DISP_INVERSION_ON, {}, 0},
+// #endif
+//         {ILI9481_CMD_COLMOD_PIXEL_FORMAT_SET, {0x66}, 1},
+//         /* 新增两行 */
+//         {ILI9481_CMD_COLUMN_ADDRESS_SET, {0x00, 0x00, 0x01, 0x3F}, 4},
+//         {ILI9481_CMD_PAGE_ADDRESS_SET, {0x00, 0x00, 0x01, 0xDF/* 0xE0 */}, 4},
+//         {ILI9481_CMD_NORMAL_DISP_MODE_ON, {}, 0x80},
+//         {ILI9481_CMD_DISPLAY_ON, {}, 0x80},
+//         {0, {0}, 0xff},
+//     };
+
+//     /* https://github.com/Bodmer/TFT_eSPI/blob/master/TFT_Drivers/ILI9481_Init.h
+//         ILI9481_INIT_4
+//         条纹比3明显
+//          */
+//     lcd_init_cmd_t ili_init_cmds[]={
+//         {ILI9481_CMD_SLEEP_OUT, {0x00}, 0x80},
+//         {ILI9481_CMD_POWER_SETTING, {0x07, 0x40/* 0x41 */, 0x1D/* 0x07, 0x42, 0x18 */}, 3},
+//         {ILI9481_CMD_VCOM_CONTROL, {0x00, 0x18, 0x13/* 0x2B, 0x1F *//* 0x00, 0x07, 0x10 */}, 3},
+//         {ILI9481_CMD_POWER_CONTROL_NORMAL, {0x01, 0x11/* 0x02 */}, 2},
+//         {ILI9481_CMD_PANEL_DRIVE, {0x10, 0x3B, 0x00, 0x02, 0x11}, 5},
+//         {ILI9481_CMD_FRAME_RATE, {0x03}, 1},
+//         {ILI9481_CMD_FRAME_MEMORY_ACCESS, {0x0, 0x0, 0x0, 0x0}, 4},
+//         // {ILI9481_CMD_DISP_TIMING_NORMAL, {0x10, 0x10, 0x22}, 3},
+//         // {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x14, 0x33, 0x10, 0x00, 0x16, 0x44, 0x36, 0x77, 0x00, 0x0F, 0x00}, 12},
+//         {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x44, 0x06, 0x44, 0x0A, 0x08, 0x17, 0x33, 0x77, 0x44, 0x08, 0x0C}, 12},
+//         {ILI9481_CMD_ACCESS_PROTECT, {0x00}, 1},
+//         {0xE4, {0xA0}, 1},
+//         {0xF0, {0x01}, 1},
+//         // {0xF3, {0x40, 0x0A/* 0x02, 0x1A */}, 2},
+//         {ILI9481_CMD_MEMORY_ACCESS_CONTROL, {0x0A}, 1},
+// #if ILI9481_INVERT_COLORS
+//         {ILI9481_CMD_DISP_INVERSION_ON, {}, 0},
+// #endif
+//         {ILI9481_CMD_COLMOD_PIXEL_FORMAT_SET, {0x66}, 1},
+//         /* 新增两行 */
+//         {ILI9481_CMD_COLUMN_ADDRESS_SET, {0x00, 0x00, 0x01, 0x3F}, 4},
+//         {ILI9481_CMD_PAGE_ADDRESS_SET, {0x00, 0x00, 0x01, 0xDF/* 0xE0 */}, 4},
+//         {ILI9481_CMD_NORMAL_DISP_MODE_ON, {}, 0x80},
+//         {ILI9481_CMD_DISPLAY_ON, {}, 0x80},
+//         {0, {0}, 0xff},
+//     };
+
+
+//         /* https://github.com/Bodmer/TFT_eSPI/blob/master/TFT_Drivers/ILI9481_Init.h
+//         ILI9481_INIT_5
+//         条纹和4一样明显
+//          */
+//     lcd_init_cmd_t ili_init_cmds[]={
+//         {ILI9481_CMD_SLEEP_OUT, {0x00}, 0x80},
+//         {ILI9481_CMD_POWER_SETTING, {0x07, 0x41, 0x1D}, 3},
+//         {ILI9481_CMD_VCOM_CONTROL, {0x00, 0x1C, 0x1F}, 3},
+//         {ILI9481_CMD_POWER_CONTROL_NORMAL, {0x01, 0x11/* 0x02 */}, 2},
+//         {ILI9481_CMD_PANEL_DRIVE, {0x10, 0x3B, 0x00, 0x02, 0x11}, 5},
+//         {ILI9481_CMD_FRAME_RATE, {0x03}, 1},
+//         {ILI9481_CMD_INTERFACE_CONTROL, {0x83}, 1},
+
+//         // {ILI9481_CMD_FRAME_MEMORY_ACCESS, {0x0, 0x0, 0x0, 0x0}, 4},
+//         // {ILI9481_CMD_DISP_TIMING_NORMAL, {0x10, 0x10, 0x22}, 3},
+//         {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x26, 0x21, 0x00, 0x00, 0x1F, 0x65, 0x23, 0x77, 0x00, 0x0F, 0x00}, 12},
+//         {ILI9481_CMD_ACCESS_PROTECT, {0x00}, 1},
+//         {0xE4, {0xA0}, 1},
+//         {0xF0, {0x01}, 1},
+//         // {0xF3, {0x40, 0x0A/* 0x02, 0x1A */}, 2},
+//         {ILI9481_CMD_MEMORY_ACCESS_CONTROL, {0x0A}, 1},
+// #if ILI9481_INVERT_COLORS
+//         {ILI9481_CMD_DISP_INVERSION_ON, {}, 0},
+// #endif
+//         {ILI9481_CMD_COLMOD_PIXEL_FORMAT_SET, {0x66}, 1},
+//         /* 新增两行 */
+//         {ILI9481_CMD_COLUMN_ADDRESS_SET, {0x00, 0x00, 0x01, 0x3F}, 4},
+//         {ILI9481_CMD_PAGE_ADDRESS_SET, {0x00, 0x00, 0x01, 0xDF/* 0xE0 */}, 4},
+//         {ILI9481_CMD_NORMAL_DISP_MODE_ON, {}, 0x80},
+//         {ILI9481_CMD_DISPLAY_ON, {}, 0x80},
+//         {0, {0}, 0xff},
+//     };
+
+//         /* https://github.com/Bodmer/TFT_eSPI/blob/master/TFT_Drivers/ILI9481_Init.h
+//         ILI9481_INIT_6
+//         条纹还是有
+//          */
+//     lcd_init_cmd_t ili_init_cmds[]={
+//         {ILI9481_CMD_SLEEP_OUT, {0x00}, 0x80},
+//         {ILI9481_CMD_POWER_SETTING, {0x07, 0x41, 0x1D}, 3},
+//         {ILI9481_CMD_VCOM_CONTROL, {0x00, 0x2B, 0x1F}, 3},
+//         {ILI9481_CMD_POWER_CONTROL_NORMAL, {0x01, 0x11/* 0x02 */}, 2},
+//         {ILI9481_CMD_PANEL_DRIVE, {0x10, 0x3B, 0x00, 0x02, 0x11, 0x00}, 6},
+//         {ILI9481_CMD_FRAME_RATE, {0x03}, 1},
+//         {ILI9481_CMD_INTERFACE_CONTROL, {0x80}, 1},
+
+        
+//         // {ILI9481_CMD_DISP_TIMING_NORMAL, {0x10, 0x10, 0x22}, 3},
+//         {ILI9481_CMD_GAMMA_SETTING, {0x00, 0x14, 0x33, 0x10, 0x00, 0x16, 0x44, 0x36, 0x77, 0x00, 0x0F, 0x00}, 12},
+//         {ILI9481_CMD_ACCESS_PROTECT, {0x00}, 1},
+//         {0xE4, {0xA0}, 1},
+//         {0xF0, {0x01}, 1},
+//         {0xF3, {0x40, 0x0A}, 2},
+//         {0xF6, {0x84}, 1},
+//         {0xF7, {0x80}, 1},
+
+//         {ILI9481_CMD_FRAME_MEMORY_ACCESS, {0x00, 0x01, 0x06, 0x30}, 4},
+//         {ILI9481_CMD_DISPLAY_MODE, {0x00}, 1},
+//         {ILI9481_CMD_READ_DISP_PIXEL_FORMAT, {0x00, 0x55}, 2},
+
+//         {ILI9481_CMD_MEMORY_ACCESS_CONTROL, {0x0A}, 1},
+// #if ILI9481_INVERT_COLORS
+//         {ILI9481_CMD_DISP_INVERSION_ON, {}, 0},
+// #endif
+//         {ILI9481_CMD_COLMOD_PIXEL_FORMAT_SET, {0x66}, 1},
+//         /* 新增两行 */
+//         {ILI9481_CMD_COLUMN_ADDRESS_SET, {0x00, 0x00, 0x01, 0x3F}, 4},
+//         {ILI9481_CMD_PAGE_ADDRESS_SET, {0x00, 0x00, 0x01, 0xDF/* 0xE0 */}, 4},
+//         {ILI9481_CMD_NORMAL_DISP_MODE_ON, {}, 0x80},
+//         {ILI9481_CMD_DISPLAY_ON, {}, 0x80},
+//         {0, {0}, 0xff},
+//     };
+
     //Initialize non-SPI GPIOs
     gpio_pad_select_gpio(ILI9481_DC);
     gpio_set_direction(ILI9481_DC, GPIO_MODE_OUTPUT);
-
-#if ILI9481_USE_RST
     gpio_pad_select_gpio(ILI9481_RST);
     gpio_set_direction(ILI9481_RST, GPIO_MODE_OUTPUT);
+
+#if ILI9481_ENABLE_BACKLIGHT_CONTROL
+    gpio_pad_select_gpio(ILI9481_BCKL);
+    gpio_set_direction(ILI9481_BCKL, GPIO_MODE_OUTPUT);
+#endif
 
     //Reset the display
     gpio_set_level(ILI9481_RST, 0);
     vTaskDelay(100 / portTICK_RATE_MS);
     gpio_set_level(ILI9481_RST, 1);
     vTaskDelay(100 / portTICK_RATE_MS);
-#endif
 
     ESP_LOGI(TAG, "ILI9481 initialization.");
 
@@ -104,6 +358,8 @@ void ili9481_init(void)
         }
         cmd++;
     }
+
+    ili9481_enable_backlight(true);
 
     ili9481_set_orientation(ILI9481_DISPLAY_ORIENTATION);
 }
@@ -164,6 +420,22 @@ void ili9481_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * col
     heap_caps_free(mybuf);
 }
 
+void ili9481_enable_backlight(bool backlight)
+{
+#if ILI9481_ENABLE_BACKLIGHT_CONTROL
+    ESP_LOGI(TAG, "%s backlight.", backlight ? "Enabling" : "Disabling");
+    uint32_t tmp = 0;
+
+#if (ILI9481_BCKL_ACTIVE_LVL==1)
+    tmp = backlight ? 1 : 0;
+#else
+    tmp = backlight ? 0 : 1;
+#endif
+
+    gpio_set_level(ILI9481_BCKL, tmp);
+#endif
+}
+
 /**********************
  *   STATIC FUNCTIONS
  **********************/
@@ -171,21 +443,21 @@ void ili9481_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * col
 
 static void ili9481_send_cmd(uint8_t cmd)
 {
-    disp_wait_for_pending_transactions();
+    // disp_wait_for_pending_transactions();
     gpio_set_level(ILI9481_DC, 0);	 /*Command mode*/
     disp_spi_send_data(&cmd, 1);
 }
 
 static void ili9481_send_data(void * data, uint16_t length)
 {
-    disp_wait_for_pending_transactions();
+    // disp_wait_for_pending_transactions();
     gpio_set_level(ILI9481_DC, 1);	 /*Data mode*/
     disp_spi_send_data(data, length);
 }
 
 static void ili9481_send_color(void * data, uint16_t length)
 {
-    disp_wait_for_pending_transactions();
+    // disp_wait_for_pending_transactions();
     gpio_set_level(ILI9481_DC, 1);   /*Data mode*/
     disp_spi_send_colors(data, length);
 }
