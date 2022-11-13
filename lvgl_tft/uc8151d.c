@@ -171,7 +171,8 @@ static void uc8151d_full_update(uint8_t *buf)
     uc8151d_panel_init();
 
     uint8_t *buf_ptr = buf;
-    uint8_t old_data[EPD_ROW_LEN] = { 0 };
+    uint8_t old_data[EPD_ROW_LEN]; // = { 0 };
+    memset( old_data, 0, EPD_ROW_LEN*EPD_ROW_LEN*sizeof(uint8_t) );
 
     // Fill old data
     uc8151d_spi_send_cmd(0x10);
@@ -208,8 +209,7 @@ void uc8151d_lv_fb_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *
     ESP_LOGD(TAG, "Ready");
 }
 
-void uc8151d_lv_set_fb_cb(struct _disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
-                           lv_color_t color, lv_opa_t opa)
+void uc8151d_lv_set_fb_cb(lv_disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y, lv_color_t color, lv_opa_t opa)
 {
     uint16_t byte_index = (x >> 3u) + (y * EPD_ROW_LEN);
     uint8_t bit_index = x & 0x07u;
@@ -222,7 +222,7 @@ void uc8151d_lv_set_fb_cb(struct _disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t
     }
 }
 
-void uc8151d_lv_rounder_cb(struct _disp_drv_t *disp_drv, lv_area_t *area)
+void uc8151d_lv_rounder_cb(lv_disp_drv_t *disp_drv, lv_area_t *area)
 {
     // Always send full framebuffer if it's not in partial mode
     area->x1 = 0;
