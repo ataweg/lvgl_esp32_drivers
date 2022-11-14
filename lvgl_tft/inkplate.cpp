@@ -41,6 +41,23 @@ void inkplate_init(void)
     display.setRotation(0);
     // Clear screen
     display.clearDisplay();
+
+    display.setTextColor(BLACK, WHITE); // Set text color to be black and background color to be white
+    display.setTextSize(4);             // Set text to be 4 times bigger than classic 5x7 px text
+
+    // Prepare message text and position
+    char message[] = "Init done!";
+    int w = display.width();
+    int h = display.height();
+    int cursor_x = (w / 2) - (strlen(message) / 2);
+    int cursor_y = h / 2;
+
+    // Write text to the center of the screen
+    display.setCursor(cursor_x, cursor_y);
+    display.print(message);
+
+    // Do a partial update and print the text to the screen
+    display.partialUpdate();
 }
 
 /* Required by LVGL */
