@@ -15,9 +15,10 @@
 // SPI Generic epapers (Goodisplay/ Waveshare)
 // Select the right class for your SPI epaper: https://github.com/martinberlin/cale-idf/wiki
 //#include <gdew0583t7.h>
-#include <gdew027w3.h>
-Gdew027w3 display(io);
-EpdSpi io;
+#include <gdew042t2.h>
+
+EpdSpi IO;
+Gdew042t2 display(IO);
 //Gdew0583T7 display(io);
 
 /** test Display dimensions
@@ -58,7 +59,7 @@ void calepd_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_m
       //display.updateWindow(area->x1,area->y1,lv_area_get_width(area),lv_area_get_height(area), true);
       //display.updateWindow(area->x1,area->y1,lv_area_get_width(area),lv_area_get_height(area));
     }
-    
+
     /* IMPORTANT!!!
      * Inform the graphics library that you are ready with the flushing */
     lv_disp_flush_ready(drv);
@@ -71,14 +72,14 @@ void calepd_set_px_cb(lv_disp_drv_t * disp_drv, uint8_t* buf,
 {
     //If not drawing anything: Debug to see if this function is called:
     //printf("set_px %d %d\n",(int16_t)x,(int16_t)y);
-    
+
     // Test using RGB232
     int16_t epd_color = EPD_WHITE;
 
     // Color setting use: RGB232
     // Only monochrome:All what is not white, turn black
     if ((int16_t)color.full<254) {
-        epd_color = EPD_BLACK;        
+        epd_color = EPD_BLACK;
     }
     display.drawPixel((int16_t)x, (int16_t)y, epd_color);
 }
