@@ -14,6 +14,8 @@ elseif(CONFIG_LV_EPAPER_EPDIY_DISPLAY_CONTROLLER)
     list(APPEND SOURCES "lvgl_tft/epdiy_epaper.cpp")
 elseif(CONFIG_LV_EPAPER_CALEPD_DISPLAY_CONTROLLER)
     list(APPEND SOURCES "lvgl_tft/calepd_epaper.cpp")
+elseif(CONFIG_LV_EPAPER_INKPLATE_DISPLAY_CONTROLLER)
+    list(APPEND SOURCES "lvgl_tft/inkplate.cpp")
 elseif(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9481)
     list(APPEND SOURCES "lvgl_tft/ili9481.c")
 elseif(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9486)
@@ -89,6 +91,7 @@ idf_component_register(SRCS ${SOURCES}
                        INCLUDE_DIRS ${LVGL_INCLUDE_DIRS}
                        REQUIRES lvgl
                        REQUIRES CalEPD
+                       REQUIRES inkplate
                        )
 
 target_compile_definitions(${COMPONENT_LIB} PUBLIC "-DLV_LVGL_H_INCLUDE_SIMPLE")

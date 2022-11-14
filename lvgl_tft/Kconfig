@@ -93,6 +93,10 @@ menu "LVGL TFT/Epaper Display controller"
         bool
         help
             CalEPD SPI epaper controller.
+    config LV_EPAPER_INKPLATE_DISPLAY_CONTROLLER
+        bool
+        help
+            Inkplate SPI epaper controller.
     config LV_TFT_DISPLAY_CONTROLLER_ILI9341
         bool
         help
@@ -284,6 +288,11 @@ menu "LVGL TFT/Epaper Display controller"
         bool "CALEPD_GENERIC"
         # Use also Parallel to avoid LGVL SPI instantiation
             select LV_EPAPER_CALEPD_DISPLAY_CONTROLLER
+            select LV_EPAPER_DISPLAY_PROTOCOL_PARALLEL
+    config LV_EPAPER_DISPLAY_USER_CONTROLLER_INKPLATE
+        bool "INKPLATE_GENERIC"
+        # Use also Parallel to avoid LGVL SPI instantiation
+            select LV_EPAPER_INKPLATE_DISPLAY_CONTROLLER
             select LV_EPAPER_DISPLAY_PROTOCOL_PARALLEL
     config LV_TFT_DISPLAY_USER_CONTROLLER_ILI9341
         bool "ILI9341"
