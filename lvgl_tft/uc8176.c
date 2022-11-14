@@ -53,6 +53,7 @@
 
 
 void SetLut(void);
+void uc8176_full_clean(void);
 
 const unsigned char lut_vcom0[] =
 {
@@ -204,14 +205,16 @@ static void uc8176_spi_send_data_byte(uint8_t data)
     gpio_set_level(PIN_DC, 1);  // DC = 1 for data
     disp_spi_send_data(&data, 1);
 }
-
+/*
 static void uc8176_spi_send_fb(uint8_t *data, size_t len)
 {
     disp_wait_for_pending_transactions();
     gpio_set_level(PIN_DC, 1);   // DC = 1 for data
     disp_spi_send_colors(data, len);
 }
+*/
 
+/*
 static void uc8176_spi_send_seq(const uc8176_seq_t *seq, size_t len)
 {
     ESP_LOGD(TAG, "Writing cmd/data sequence, count %u", len);
@@ -224,6 +227,7 @@ static void uc8176_spi_send_seq(const uc8176_seq_t *seq, size_t len)
         }
     }
 }
+*/
 
 static esp_err_t uc8176_wait_busy(uint32_t timeout_ms)
 {
@@ -274,14 +278,14 @@ static void uc8176_panel_init()
        uc8176_spi_send_data_byte(0x00);                  // VCOM_HV, VGHL_LV[1], VGHL_LV[0]
        uc8176_spi_send_data_byte(0x2b);                  // VDH
        uc8176_spi_send_data_byte(0x2b);                  // VDL
-       uc8176_spi_send_cmd(0x06);
+       uc8176_spi_send_cmd(0x13);
        uc8176_spi_send_data_byte(0x17);
        uc8176_spi_send_data_byte(0x17);
        uc8176_spi_send_data_byte(0x17);                  //07 0f 17 1f 27 2F 37 2f
        uc8176_spi_send_cmd(0x04);
           uc8176_wait_busy(0);
        uc8176_spi_send_cmd(0x00);
-       uc8176_spi_send_data_byte(0xbf);    // KW-BF   KWR-AF  BWROTP 0f
+       uc8176_spi_send_data_byte(0x3f);    // KW-BF   KWR-AF  BWROTP 0f
 
        uc8176_spi_send_cmd(0x30);
        uc8176_spi_send_data_byte(0x3c);        // 3A 100HZ   29 150Hz 39 200HZ  31 171HZ
@@ -294,25 +298,36 @@ static void uc8176_panel_init()
 
     uc8176_spi_send_cmd(0x82); // vcom_DC setting
     uc8176_spi_send_data_byte(0x12);
-
-    uc8176_spi_send_cmd(0X50); // VCOM AND DATA INTERVAL SETTING
-    uc8176_spi_send_data_byte(0x97); // 97white border 77black border    VBDF 17|D7 VBDW 97 VBDB 57    VBDF F7 VBDW 77 VBDB 37  VBDR B7
-    // Panel settings
-
+/*
     uc8176_spi_send_cmd(0x00);
 #if defined (CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT_INVERTED)
     uc8176_spi_send_data_byte(0x13);
 #elif defined (CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT)
     uc8176_spi_send_data_byte(0x1f);
 #endif
-
+*/
     // Power up
+    //uc8176_spi_send_cmd(0x04);
+    //uc8176_wait_busy(0);
 
+//    SetLut();
+
+    uc8176_spi_send_cmd(0X50); // VCOM AND DATA INTERVAL SETTING
+    uc8176_spi_send_data_byte(0x97); // 97white border 77black border    VBDF 17|D7 VBDW 97 VBDB 57    VBDF F7 VBDW 77 VBDB 37  VBDR B7
+    // Panel settings
+
+    //refresh screen
+    uc8176_spi_send_cmd(0x12); // vcom_DC setting
+    vTaskDelay(pdMS_TO_TICKS(10));
+    // Turn on display
+    uc8176_spi_send_cmd(0x12); // vcom_DC setting
+    vTaskDelay(pdMS_TO_TICKS(100));
+    uc8176_wait_busy(1);
+    uc8176_full_clean();
     /*
-    uc8176_spi_send_cmd(0x04);
-    uc8176_wait_busy(0);
+
     */
-    SetLut();
+
 }
 
 void SetLut(void) {
@@ -373,6 +388,21 @@ static void uc8176_full_update(uint8_t *buf)
 
 void uc8176_lv_fb_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
 {
+  size_t len = ((area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1)) / 8;
+
+  ESP_LOGD(TAG, "x1: 0x%x, x2: 0x%x, y1: 0x%x, y2: 0x%x", area->x1, area->x2, area->y1, area->y2);
+  ESP_LOGD(TAG, "Writing LVGL fb with len: %u", len);
+
+  uint8_t *buf = (uint8_t *) color_map;
+
+  uc8176_full_update(buf);
+
+   lv_disp_flush_ready(drv);
+  vTaskDelay(pdMS_TO_TICKS(1000));
+  ESP_LOGD(TAG, "Ready");
+}
+
+void uc8176_full_clean(void){
   uc8176_spi_send_cmd(RESOLUTION_SETTING);
   uc8176_spi_send_data_byte(400 >> 8);
   uc8176_spi_send_data_byte(400 & 0xff);
@@ -394,25 +424,7 @@ void uc8176_lv_fb_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *c
   vTaskDelay(pdMS_TO_TICKS(2));
   uc8176_spi_send_cmd(DISPLAY_REFRESH);
   vTaskDelay(pdMS_TO_TICKS(100));
-  uc8176_wait_busy(0);
-
-  uint8_t *buf = (uint8_t *) color_map;
-  uc8176_full_update(buf);
-
-/*
-  size_t len = ((area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1)) / 8;
-
-  ESP_LOGD(TAG, "x1: 0x%x, x2: 0x%x, y1: 0x%x, y2: 0x%x", area->x1, area->x2, area->y1, area->y2);
-  ESP_LOGD(TAG, "Writing LVGL fb with len: %u", len);
-
-  uint8_t *buf = (uint8_t *) color_map;
-
-  uc8176_full_update(buf);
-
-   //lv_disp_flush_ready(drv);
-    vTaskDelay(pdMS_TO_TICKS(1000));
-    ESP_LOGD(TAG, "Ready");
-    */
+  //uc8176_wait_busy(0);
 }
 
 void uc8176_lv_set_fb_cb(lv_disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
