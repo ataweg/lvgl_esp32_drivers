@@ -42,7 +42,7 @@ extern "C" {
 #define DISP_BUF_SIZE  (LV_HOR_RES * 40)
 #elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7796S
 #define DISP_BUF_SIZE  (LV_HOR_RES_MAX * LV_VER_RES_MAX/3)
-// IMPORTANT: This will render the screen in 10 times: 
+// IMPORTANT: This will render the screen in 10 times:
 #elif defined (CONFIG_LV_EPAPER_EPDIY_DISPLAY_CONTROLLER)
   #define DISP_BUF_SIZE LV_HOR_RES_MAX*(LV_VER_RES_MAX/10)
 #elif defined (CONFIG_LV_EPAPER_CALEPD_DISPLAY_CONTROLLER)
@@ -77,6 +77,8 @@ extern "C" {
 #elif defined (CONFIG_LV_TFT_DISPLAY_CONTROLLER_JD79653A)
 #define DISP_BUF_SIZE ((LV_VER_RES * LV_VER_RES) / 8) // 5KB
 #elif defined (CONFIG_LV_TFT_DISPLAY_CONTROLLER_UC8151D)
+#define DISP_BUF_SIZE ((LV_VER_RES * LV_VER_RES) / 8) // 2888 bytes
+#elif defined (CONFIG_LV_TFT_DISPLAY_CONTROLLER_UC8176)
 #define DISP_BUF_SIZE ((LV_VER_RES * LV_VER_RES) / 8) // 2888 bytes
 #else
 #error "No display controller selected"

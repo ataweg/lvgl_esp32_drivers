@@ -150,21 +150,21 @@ void lvgl_driver_init(void)
 #if CONFIG_LV_TOUCH_CONTROLLER != TOUCH_CONTROLLER_NONE
     #if defined (CONFIG_LV_TOUCH_DRIVER_PROTOCOL_SPI)
         ESP_LOGI(TAG, "Initializing SPI master for touch");
-        
+
         lvgl_spi_driver_init(TOUCH_SPI_HOST,
             TP_SPI_MISO, TP_SPI_MOSI, TP_SPI_CLK,
             0 /* Defaults to 4094 */, 2,
             -1, -1);
-        
+
         tp_spi_add_device(TOUCH_SPI_HOST);
-        
+
         touch_driver_init();
     #elif defined (CONFIG_LV_TOUCH_DRIVER_PROTOCOL_I2C)
         ESP_LOGI(TAG, "Initializing I2C master for touch");
         lvgl_i2c_driver_init(TOUCH_I2C_PORT,
             TOUCH_I2C_SDA, TOUCH_I2C_SCL,
-            TOUCH_I2C_SPEED_HZ); 
-        
+            TOUCH_I2C_SPEED_HZ);
+
         touch_driver_init();
     #elif defined (CONFIG_LV_TOUCH_DRIVER_ADC)
         touch_driver_init();
@@ -172,7 +172,7 @@ void lvgl_driver_init(void)
         touch_driver_init();
     #else
        #error "No protocol defined for touch controller"
-      
+
     #endif
 #else
 #endif

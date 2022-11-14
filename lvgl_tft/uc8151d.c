@@ -234,6 +234,7 @@ void uc8151d_lv_rounder_cb(lv_disp_drv_t *disp_drv, lv_area_t *area)
 void uc8151d_init()
 {
     // Initialise event group
+    ESP_LOGE(TAG, "Before initi!");
     uc8151d_evts = xEventGroupCreate();
     if (!uc8151d_evts) {
         ESP_LOGE(TAG, "Failed when initialising event group!");

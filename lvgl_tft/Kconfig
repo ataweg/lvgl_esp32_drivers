@@ -163,6 +163,11 @@ menu "LVGL TFT/Epaper Display controller"
         help
             UltraChip UC8151D display controller with GoodDisplay GDEW0154M10 DES e-paper panel
 
+    config LV_TFT_DISPLAY_CONTROLLER_UC8176
+        bool
+        help
+            UltraChip UC8176 display controller with GoodDisplay GDEW042M10 DES e-paper panel
+
     config LV_TFT_DISPLAY_CONTROLLER_RA8875
         bool
         help
@@ -185,7 +190,7 @@ menu "LVGL TFT/Epaper Display controller"
         bool
         help
             Epaper controller protocol Parallel based on EPDiy 8 data lines
-            
+
     config LV_TFT_DISPLAY_PROTOCOL_SPI
         bool
         help
@@ -274,7 +279,7 @@ menu "LVGL TFT/Epaper Display controller"
         bool "EPDIY_GENERIC"
             select LV_EPAPER_EPDIY_DISPLAY_CONTROLLER
             select LV_EPAPER_DISPLAY_PROTOCOL_PARALLEL
-        
+
     config LV_EPAPER_DISPLAY_USER_CONTROLLER_CALEPD
         bool "CALEPD_GENERIC"
         # Use also Parallel to avoid LGVL SPI instantiation
@@ -343,6 +348,11 @@ menu "LVGL TFT/Epaper Display controller"
         config LV_TFT_DISPLAY_USER_CONTROLLER_UC8151D
             bool "UC8151D"
             select LV_TFT_DISPLAY_CONTROLLER_UC8151D
+            select LV_TFT_DISPLAY_PROTOCOL_SPI
+            select LV_TFT_DISPLAY_MONOCHROME
+        config LV_TFT_DISPLAY_USER_CONTROLLER_UC8176
+            bool "UC8176"
+            select LV_TFT_DISPLAY_CONTROLLER_UC8176
             select LV_TFT_DISPLAY_PROTOCOL_SPI
             select LV_TFT_DISPLAY_MONOCHROME
         config LV_TFT_DISPLAY_USER_CONTROLLER_RA8875
@@ -538,7 +548,7 @@ menu "LVGL TFT/Epaper Display controller"
         default LV_TFT_SPI_CLK_DIVIDER_5 if LV_TFT_DISPLAY_CONTROLLER_ILI9481
         default LV_TFT_SPI_CLK_DIVIDER_3 if LV_TFT_DISPLAY_CONTROLLER_HX8357
         default LV_TFT_SPI_CLK_DIVIDER_10 if LV_TFT_DISPLAY_CONTROLLER_SH1107
-        default LV_TFT_SPI_CLK_DIVIDER_16 if LV_TFT_DISPLAY_CONTROLLER_JD79653A || LV_TFT_DISPLAY_CONTROLLER_UC8151D
+        default LV_TFT_SPI_CLK_DIVIDER_16 if LV_TFT_DISPLAY_CONTROLLER_JD79653A || LV_TFT_DISPLAY_CONTROLLER_UC8151D || LV_TFT_DISPLAY_CONTROLLER_UC8176
         default LV_TFT_SPI_CLK_DIVIDER_2
 
         config LV_TFT_SPI_CLK_DIVIDER_1
@@ -766,11 +776,11 @@ menu "LVGL TFT/Epaper Display controller"
 
         config LV_DISP_ST7789_SOFT_RESET
             bool "Soft reset - use software reset instead of reset pin"
-            depends on LV_TFT_DISPLAY_CONTROLLER_ST7789            
+            depends on LV_TFT_DISPLAY_CONTROLLER_ST7789
             default n
             help
                 Use software reset and ignores configured reset pin (some hardware does not use a reset pin).
-    
+
     endmenu
 
     # menu will be visible only when LV_PREDEFINED_DISPLAY_NONE is y
@@ -944,11 +954,11 @@ menu "LVGL TFT/Epaper Display controller"
                 Configure the display Reset pin here.
 
         config LV_DISP_PIN_BUSY
-            int "GPIO for Busy" if LV_TFT_DISPLAY_CONTROLLER_IL3820 || LV_TFT_DISPLAY_CONTROLLER_JD79653A || LV_TFT_DISPLAY_CONTROLLER_UC8151D
+            int "GPIO for Busy" if LV_TFT_DISPLAY_CONTROLLER_IL3820 || LV_TFT_DISPLAY_CONTROLLER_JD79653A || LV_TFT_DISPLAY_CONTROLLER_UC8151D || LV_TFT_DISPLAY_CONTROLLER_UC8176
             range 0 39 if IDF_TARGET_ESP32
             range 0 43 if IDF_TARGET_ESP32S2
 
-            default 35 if LV_TFT_DISPLAY_CONTROLLER_IL3820 || LV_TFT_DISPLAY_CONTROLLER_JD79653A || LV_TFT_DISPLAY_CONTROLLER_UC8151D
+            default 35 if LV_TFT_DISPLAY_CONTROLLER_IL3820 || LV_TFT_DISPLAY_CONTROLLER_JD79653A || LV_TFT_DISPLAY_CONTROLLER_UC8151D || LV_TFT_DISPLAY_CONTROLLER_UC8176
             default 35
 
             help

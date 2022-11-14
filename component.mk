@@ -27,6 +27,7 @@ $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_FT81X),lvgl_tft/FT81x.
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_IL3820),lvgl_tft/il3820.o)
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_JD79653A),lvgl_tft/jd79653a.o)
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_UC8151D),lvgl_tft/uc8151d.o)
+$(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_UC8176),lvgl_tft/uc8176.o)
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_RA8875),lvgl_tft/ra8875.o)
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_GC9A01),lvgl_tft/GC9A01.o)
 

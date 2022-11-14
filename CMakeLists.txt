@@ -13,7 +13,7 @@ if(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9341)
 elseif(CONFIG_LV_EPAPER_EPDIY_DISPLAY_CONTROLLER)
     list(APPEND SOURCES "lvgl_tft/epdiy_epaper.cpp")
 elseif(CONFIG_LV_EPAPER_CALEPD_DISPLAY_CONTROLLER)
-    list(APPEND SOURCES "lvgl_tft/calepd_epaper.cpp")    
+    list(APPEND SOURCES "lvgl_tft/calepd_epaper.cpp")
 elseif(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9481)
     list(APPEND SOURCES "lvgl_tft/ili9481.c")
 elseif(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9486)
@@ -41,6 +41,8 @@ elseif(CONFIG_LV_TFT_DISPLAY_CONTROLLER_JD79653A)
     list(APPEND SOURCES "lvgl_tft/jd79653a.c")
 elseif(CONFIG_LV_TFT_DISPLAY_CONTROLLER_UC8151D)
     list(APPEND SOURCES "lvgl_tft/uc8151d.c")
+elseif(CONFIG_LV_TFT_DISPLAY_CONTROLLER_UC8176)
+    list(APPEND SOURCES "lvgl_tft/uc8176.c")
 elseif(CONFIG_LV_TFT_DISPLAY_CONTROLLER_RA8875)
     list(APPEND SOURCES "lvgl_tft/ra8875.c")
 elseif(CONFIG_LV_TFT_DISPLAY_CONTROLLER_GC9A01)
@@ -86,7 +88,7 @@ endif()
 idf_component_register(SRCS ${SOURCES}
                        INCLUDE_DIRS ${LVGL_INCLUDE_DIRS}
                        REQUIRES lvgl)
-                       
+
 target_compile_definitions(${COMPONENT_LIB} PUBLIC "-DLV_LVGL_H_INCLUDE_SIMPLE")
 
 else()
