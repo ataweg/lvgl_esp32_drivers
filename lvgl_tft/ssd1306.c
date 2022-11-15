@@ -101,14 +101,14 @@ void ssd1306_init(void)
     uint8_t orientation_1 = 0;
     uint8_t orientation_2 = 0;
 
-#if defined (CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE)
+#if (CONFIG_LV_DISPLAY_ORIENTATION == 2)
     orientation_1 = OLED_CMD_SET_SEGMENT_REMAP;
     orientation_2 = OLED_CMD_SET_COM_SCAN_MODE_REMAP;
-#elif defined (CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED)
+#elif (CONFIG_LV_DISPLAY_ORIENTATION == 3)
     orientation_1 = 0xA0;
     orientation_2 = OLED_CMD_SET_COM_SCAN_MODE_NORMAL;
 #else
-    #error "Unsupported orientation"
+    #error "Unsupported orientation - only landcape is acceptable"
 #endif
 
     uint8_t display_mode = 0;

@@ -163,7 +163,6 @@ void st7789_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * colo
     offsety1 += CONFIG_LV_TFT_DISPLAY_Y_OFFSET;
     offsety2 += CONFIG_LV_TFT_DISPLAY_Y_OFFSET;
 
-#elif (LV_HOR_RES == 240) && (LV_VER_RES == 240)
 #if (CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT)
     offsetx1 += 80;
     offsetx2 += 80;
