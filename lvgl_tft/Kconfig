@@ -30,11 +30,11 @@ menu "LVGL TFT/Epaper Display controller"
         config LV_PREDEFINED_DISPLAY_M5STICKC
             bool "M5StickC"
             select LV_TFT_DISPLAY_CONTROLLER_ST7796S
-            select LV_TFT_DISPLAY_PROTOCOL_PAR
-        config LV_PREDEFINED_DISPLAY_M5STICKC
-            bool "Nscreen32"
-            select LV_TFT_DISPLAY_CONTROLLER_ST7735S
             select LV_TFT_DISPLAY_PROTOCOL_SPI
+        config LV_PREDEFINED_DISPLAY_NSCREEN32
+            bool "Nscreen32"
+            select LV_TFT_DISPLAY_CONTROLLER_ST7796_PARALLEL
+            select LV_TFT_DISPLAY_PROTOCOL_PARALLEL
         config LV_PREDEFINED_DISPLAY_ERTFT0356
             bool "ER-TFT035-6"
             select LV_TFT_DISPLAY_CONTROLLER_ILI9488
@@ -186,6 +186,11 @@ menu "LVGL TFT/Epaper Display controller"
         help
             ST7796S display controller.
 
+config LV_TFT_DISPLAY_CONTROLLER_ST7796_PARALLEL
+    bool
+    help
+        ST7796 parallel display controller.
+
     # Display controller communication protocol
     #
     # This symbols define the communication protocol used by the
@@ -198,6 +203,11 @@ menu "LVGL TFT/Epaper Display controller"
         bool
         help
             Epaper controller protocol Parallel based on EPDiy 8 data lines
+
+    config LV_TFT_DISPLAY_PROTOCOL_PARALLEL
+        bool
+        help
+            TFT controller protocol Parallel based on 8 data lines
 
     config LV_TFT_DISPLAY_PROTOCOL_SPI
         bool
@@ -323,6 +333,10 @@ menu "LVGL TFT/Epaper Display controller"
         bool "ST7796S"
             select LV_TFT_DISPLAY_CONTROLLER_ST7796S
             select LV_TFT_DISPLAY_PROTOCOL_SPI
+    config LV_TFT_DISPLAY_USER_CONTROLLER_ST7796_PARALLEL
+        bool "ST7796_PARALLEL"
+            select LV_TFT_DISPLAY_CONTROLLER_ST7796_PARALLEL
+            select LV_TFT_DISPLAY_PROTOCOL_PARALLEL
     config LV_TFT_DISPLAY_USER_CONTROLLER_GC9A01
         bool "GC9A01"
             select LV_TFT_DISPLAY_CONTROLLER_GC9A01
@@ -633,13 +647,13 @@ menu "LVGL TFT/Epaper Display controller"
 
     config LV_INVERT_COLORS
         bool "Invert colors in display" if LV_TFT_DISPLAY_CONTROLLER_ILI9341 || LV_TFT_DISPLAY_CONTROLLER_ST7735S || LV_TFT_DISPLAY_CONTROLLER_ILI9481 || LV_TFT_DISPLAY_CONTROLLER_ST7789 || LV_TFT_DISPLAY_CONTROLLER_SSD1306 || LV_TFT_DISPLAY_CONTROLLER_SH1107 || LV_TFT_DISPLAY_CONTROLLER_HX8357
-        default y if LV_PREDEFINED_DISPLAY_M5STACK || LV_PREDEFINED_DISPLAY_M5STICKC
+        default y if LV_PREDEFINED_DISPLAY_M5STACK || LV_PREDEFINED_DISPLAY_M5STICKC || LV_PREDEFINED_DISPLAY_NSCREEN32
         help
             If the colors look inverted on your display, try enabling this.
             If it didn't help try LVGL configuration -> Swap the 2 bytes of RGB565 color.
 
     config LV_M5STICKC_HANDLE_AXP192
-        bool "Handle Backlight and TFT power for M5StickC using AXP192." if LV_PREDEFINED_DISPLAY_M5STICKC || LV_TFT_DISPLAY_CONTROLLER_ST7735S
+        bool "Handle Backlight and TFT power for M5StickC using AXP192." if LV_PREDEFINED_DISPLAY_M5STICKC
         default y if LV_PREDEFINED_DISPLAY_M5STICKC
         help
             Display and TFT power supply on M5StickC is controlled using an AXP192 Power Mangerment IC.
