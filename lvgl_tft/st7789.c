@@ -162,14 +162,16 @@ void st7789_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * colo
     offsetx2 += CONFIG_LV_TFT_DISPLAY_X_OFFSET;
     offsety1 += CONFIG_LV_TFT_DISPLAY_Y_OFFSET;
     offsety2 += CONFIG_LV_TFT_DISPLAY_Y_OFFSET;
+#endif
 
-#if (CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT)
+#if (CONFIG_LV_DISPLAY_ORIENTATION == 0)
+    //printf("Setting offset for PORTRAIT \n");
     offsetx1 += 80;
     offsetx2 += 80;
-#elif (CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED)
+#elif (CONFIG_LV_DISPLAY_ORIENTATION == 3)
+    //printf("Setting offset for LANDSCAPE_INVERTED \n");
     offsety1 += 80;
     offsety2 += 80;
-#endif
 #endif
 
     /*Column addresses*/

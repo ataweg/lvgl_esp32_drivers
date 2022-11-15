@@ -113,7 +113,7 @@ void disp_spi_add_device_config(spi_host_device_t host, spi_device_interface_con
 
 void disp_spi_add_device(spi_host_device_t host)
 {
-    disp_spi_add_device_with_speed(host, (int)80 * 1000 * 1000 /* SPI_TFT_CLOCK_SPEED_HZ */);
+    disp_spi_add_device_with_speed(host, SPI_TFT_CLOCK_SPEED_HZ);
 }
 
 void disp_spi_add_device_with_speed(spi_host_device_t host, int clock_speed_hz)
