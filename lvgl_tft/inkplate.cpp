@@ -31,8 +31,6 @@ Inkplate display(DisplayMode::INKPLATE_1BIT); // Create an object on Inkplate li
  *********************/
 #define TAG "Main"
 
-uint16_t flushcalls = 0;
-
 /* Display initialization routine */
 void inkplate_init(void)
 {
@@ -41,40 +39,17 @@ void inkplate_init(void)
     display.setRotation(0);
     // Clear screen
     display.clearDisplay();
-
-    display.setTextColor(BLACK, WHITE); // Set text color to be black and background color to be white
-    display.setTextSize(4);             // Set text to be 4 times bigger than classic 5x7 px text
-
-    // Prepare message text and position
-    char message[] = "Init done!";
-    int w = display.width();
-    int h = display.height();
-    int cursor_x = (w / 2) - (strlen(message) / 2);
-    int cursor_y = h / 2;
-
-    // Write text to the center of the screen
-    display.setCursor(cursor_x, cursor_y);
-    display.print(message);
-
     // Do a partial update and print the text to the screen
-    display.partialUpdate();
+    display.display();
 }
 
 /* Required by LVGL */
 void inkplate_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
 {
-    ++flushcalls;
-    printf("flush %d x:%d y:%d w:%d h:%d\n", flushcalls,area->x1,area->y1,lv_area_get_width(area),lv_area_get_height(area));
-
-    // Full update
-    if (lv_area_get_width(area)==display.width() && lv_area_get_height(area)==display.height()) {
-      display.partialUpdate();
-    } else {
-      // Partial update:
-      display.partialUpdate(); // Uncomment to disable partial update
-      //display.updateWindow(area->x1,area->y1,lv_area_get_width(area),lv_area_get_height(area), true);
-      //display.updateWindow(area->x1,area->y1,lv_area_get_width(area),lv_area_get_height(area));
-    }
+    // Partial update
+    display.display(); // Uncomment to disable partial update
+    display.partialUpdate();
+    printf("Updating screen \n");
 
     /* IMPORTANT!!!
      * Inform the graphics library that you are ready with the flushing */
@@ -86,16 +61,10 @@ void inkplate_set_px_cb(lv_disp_drv_t * disp_drv, uint8_t* buf,
     lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
     lv_color_t color, lv_opa_t opa)
 {
-    //If not drawing anything: Debug to see if this function is called:
-    //printf("set_px %d %d\n",(int16_t)x,(int16_t)y);
-
-    // Test using RGB232
-    int16_t epd_color = WHITE;
-
-    // Color setting use: RGB232
-    // Only monochrome:All what is not white, turn black
-    if ((int16_t)color.full<254) {
-        epd_color = BLACK;
+    if ((int16_t)color.full >= 1) {
+      display.drawPixel((int16_t)x, (int16_t)y, WHITE);
     }
-    display.drawPixel((int16_t)x, (int16_t)y, epd_color);
+    else{
+      display.drawPixel((int16_t)x, (int16_t)y, BLACK);
+    }
 }
