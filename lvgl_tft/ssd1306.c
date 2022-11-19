@@ -100,6 +100,15 @@ void ssd1306_init(void)
 {
     uint8_t orientation_1 = 0;
     uint8_t orientation_2 = 0;
+	// HELTEC OLED RESET
+    gpio_pad_select_gpio(16);
+	gpio_set_direction(16, GPIO_MODE_OUTPUT);
+
+	//Reset the display
+	gpio_set_level(16, 0);
+	vTaskDelay(100 / portTICK_RATE_MS);
+	gpio_set_level(16, 1);
+	vTaskDelay(100 / portTICK_RATE_MS);
 
 #if (CONFIG_LV_DISPLAY_ORIENTATION == 2)
     orientation_1 = OLED_CMD_SET_SEGMENT_REMAP;
