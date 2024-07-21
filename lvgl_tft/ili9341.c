@@ -234,7 +234,9 @@ static void ili9341_set_orientation(uint8_t orientation)
 #elif defined (CONFIG_LV_PREDEFINED_DISPLAY_WROVER4)
     uint8_t data[] = {0x4C, 0x88, 0x28, 0xE8};
 #elif defined (CONFIG_LV_PREDEFINED_DISPLAY_NONE)
-    uint8_t data[] = {0x48, 0x88, 0x28, 0xE8};
+//  uint8_t data[] = {0x48, 0x88, 0x28, 0xE8};     // orig
+//  uint8_t data[] = {0xA0, 0x60, 0x00, 0xC0};     // usb right/top
+    uint8_t data[] = {0x60, 0xA0, 0xC0, 0x00};     // usb left/bottom
 #endif
 
     ESP_LOGI(TAG, "0x36 command value: 0x%02X", data[orientation]);
