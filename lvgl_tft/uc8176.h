@@ -74,10 +74,10 @@
 #define POWER_SAVING                                0xE3
 
 void uc8176_init();
-void uc8176_lv_set_fb_cb(lv_disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
-                          lv_color_t color, lv_opa_t opa);
+void uc8176_lv_set_fb_cb(lv_display_t *disp, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
+                          uint8_t color, lv_opa_t opa);
 
-void uc8176_lv_rounder_cb(lv_disp_drv_t *disp_drv, lv_area_t *area);
-void uc8176_lv_fb_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map);
+void uc8176_lv_rounder_cb(lv_display_t *disp, lv_area_t *area);
+void uc8176_lv_fb_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map);
 
 #endif //LVGL_DEMO_UC8151D_H

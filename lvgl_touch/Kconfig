@@ -9,7 +9,10 @@ menu "LVGL Touch controller"
         default 4 if LV_TOUCH_CONTROLLER_ADCRAW
         default 5 if LV_TOUCH_CONTROLLER_FT81X
         default 6 if LV_TOUCH_CONTROLLER_RA8875
+        default 7 if LV_TOUCH_CONTROLLER_GT911
+        default 8 if LV_TOUCH_CONTROLLER_CST816T
         default 7 if LV_TOUCH_CONTROLLER_L58
+
     choice
 	prompt "Select a touch panel controller model."
 	default LV_TOUCH_CONTROLLER_NONE
@@ -22,7 +25,7 @@ menu "LVGL Touch controller"
             select LV_TOUCH_DRIVER_PROTOCOL_SPI
             bool "XPT2046"
 	config LV_TOUCH_CONTROLLER_FT6X06
-            select LV_TOUCH_DRIVER_PROTOCOL_I2C
+            select LV_I2C_TOUCH
             bool "FT6X06"
     
 	config LV_TOUCH_CONTROLLER_L58
@@ -42,6 +45,12 @@ menu "LVGL Touch controller"
         config LV_TOUCH_CONTROLLER_RA8875
             select LV_TOUCH_DRIVER_DISPLAY
             bool "RA8875"
+        config LV_TOUCH_CONTROLLER_GT911
+            select LV_I2C_TOUCH
+            bool "GT911"
+        config LV_TOUCH_CONTROLLER_CST816T
+            select LV_I2C_TOUCH
+            bool "CST816T"
     endchoice
     
     config LV_TOUCH_DRIVER_PROTOCOL_SPI
@@ -49,7 +58,7 @@ menu "LVGL Touch controller"
         help
             Touch controller protocol SPI
 
-    config LV_TOUCH_DRIVER_PROTOCOL_I2C
+    config LV_I2C_TOUCH
         bool
         help
             Touch controller protocol I2C
@@ -66,34 +75,17 @@ menu "LVGL Touch controller"
 	    (Note: Display must be initialized before touch)
     
     choice
-        prompt "Touch I2C port"
-        depends on LV_TOUCH_DRIVER_PROTOCOL_I2C
-        
-        default LV_TOUCH_I2C_PORT_0
-        help
-            Select the I2C port used by the touch controller.
-
-        config LV_TOUCH_I2C_PORT_0
-            bool "I2C PORT 0"
-        config LV_TOUCH_I2C_PORT_1
-            bool "I2C PORT 1"
-    endchoice
-    
-    choice
         prompt "Touch Controller SPI Bus."
         depends on LV_TOUCH_DRIVER_PROTOCOL_SPI
         
-        default LV_TOUCH_CONTROLLER_SPI_VSPI if !IDF_TARGET_ESP32S2
-        default LV_TOUCH_CONTROLLER_SPI_FSPI if IDF_TARGET_ESP32S2
+        default LV_TOUCH_CONTROLLER_SPI2_HOST
         help
-            Select the SPI Bus the TFT Display is attached to.
+            Select the SPI Bus the touch controller is attached to.
     
-        config LV_TOUCH_CONTROLLER_SPI_HSPI
-            bool "HSPI"
-        config LV_TOUCH_CONTROLLER_SPI_VSPI
-            bool "VSPI" if !IDF_TARGET_ESP32S2
-        config LV_TOUCH_CONTROLLER_SPI_FSPI
-            bool "FSPI" if IDF_TARGET_ESP32S2
+        config LV_TOUCH_CONTROLLER_SPI2_HOST
+            bool "SPI2_HOST"
+        config LV_TOUCH_CONTROLLER_SPI3_HOST
+            bool "SPI3_HOST"
         endchoice
     
     menu "Touchpanel (L58) Lilygo Pin Assignments"
@@ -269,7 +261,7 @@ menu "LVGL Touch controller"
 	config LV_FT6X36_SWAPXY
 	    bool
 	    prompt "Swap X with Y coordinate."
-	    default y
+            default n
 
         config LV_FT6X36_INVERT_X
             bool
@@ -279,7 +271,14 @@ menu "LVGL Touch controller"
         config LV_FT6X36_INVERT_Y
             bool
             prompt "Invert Y coordinate value."
-            default y
+            default n
+
+        config LV_FT6X36_COORDINATES_QUEUE
+            bool
+            prompt "Send coordinates to FreeRTOS queue."
+            default n
+            help
+            Receive from the FreeRTOS queue using the handle 'ft6x36_touch_queue_handle'.
 
     endmenu
     
@@ -300,6 +299,7 @@ menu "LVGL Touch controller"
             Configure the touchpanel MISO pin here.
 
         config LV_TOUCH_SPI_MOSI
+            # TODO Fix default for ESP32C3
             int
             prompt "GPIO for MOSI (Master Out Slave In)"
             range 0 39 if IDF_TARGET_ESP32
@@ -524,5 +524,55 @@ menu "LVGL Touch controller"
             default y
 
     endmenu
+
+    menu "Touchpanel Configuration (GT911)"
+        depends on LV_TOUCH_CONTROLLER_GT911
+
+    config LV_GT911_SWAPXY
+        bool
+        prompt "Swap X with Y coordinate."
+        default y
+
+        config LV_GT911_INVERT_X
+            bool
+            prompt "Invert X coordinate value."
+            default n
+
+        config LV_GT911_INVERT_Y
+            bool
+            prompt "Invert Y coordinate value."
+            default y
+
+    endmenu
+
+    choice
+        prompt "Select an I2C port for the touch panel"
+        default LV_I2C_TOUCH_PORT_0
+        depends on LV_I2C_TOUCH
+
+        config LV_I2C_TOUCH_PORT_0
+            bool
+            prompt "I2C port 0"
+            help
+                I2C is shared peripheral managed by I2C Manager. In order to configure I2C Manager (pinout, etc.) see menu
+                Component config->I2C Port Settings.
+
+        config LV_I2C_TOUCH_PORT_1
+            bool
+            prompt "I2C port 1"
+            help
+                I2C is shared peripheral managed by I2C Manager. In order to configure I2C Manager (pinout, etc.) see menu
+                Component config->I2C Port Settings.
+
+    endchoice
+
+    config LV_I2C
+        bool
+        default y if LV_I2C_TOUCH
+
+    config LV_I2C_TOUCH_PORT
+        int
+        default 1 if LV_I2C_TOUCH_PORT_1
+        default 0
 
 endmenu

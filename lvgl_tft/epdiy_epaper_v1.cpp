@@ -34,7 +34,7 @@ uint16_t xo = 0;
 uint16_t yo = 0;
 
 /* Required by LVGL */
-void epdiy_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+void epdiy_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map)
 {
     ++flushcalls;
     xo = area->x1;
@@ -60,9 +60,9 @@ void epdiy_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_ma
  * Called for each pixel. Designed with the idea to fill the buffer directly, not to set each pixel, see:
  * https://forum.lvgl.io/t/lvgl-port-to-be-used-with-epaper-displays/5630/3
 */
-void epdiy_set_px_cb(lv_disp_drv_t * disp_drv, uint8_t* buf,
+void epdiy_set_px_cb(lv_display_t * disp, uint8_t* buf,
     lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
-    lv_color_t color, lv_opa_t opa)
+    uint8_t color, lv_opa_t opa)
 {
     // Debug where x y is printed, not all otherwise is too much Serial
     /* if ((int16_t)y%10==0 && flushcalls>0){

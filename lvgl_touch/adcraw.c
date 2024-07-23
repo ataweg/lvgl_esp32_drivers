@@ -118,7 +118,7 @@ void adcraw_init(void)
 	gpio_set_drive_capability(yd, GPIO_DRIVE_CAP_3);
 	gpio_set_drive_capability(xl, GPIO_DRIVE_CAP_3);
 	gpio_set_drive_capability(xr, GPIO_DRIVE_CAP_3);
-	
+
 	ESP_ERROR_CHECK(esp_timer_create(&periodic_timer_args, &periodic_timer));
 	ESP_ERROR_CHECK(esp_timer_start_periodic(periodic_timer, 5 * 1000));        //5ms (expressed as microseconds)
 
@@ -139,10 +139,10 @@ static void setup_axis(gpio_num_t plus, gpio_num_t minus, gpio_num_t measure, gp
 {
 	// Set GPIOs:
 	// - Float "ignore" and "measure"
-	gpio_pad_select_gpio(ignore);
+	esp_rom_gpio_pad_select_gpio(ignore);
 	gpio_set_direction(ignore, GPIO_MODE_DISABLE);
 	gpio_set_pull_mode(ignore, GPIO_FLOATING);
-	gpio_pad_select_gpio(measure);
+	esp_rom_gpio_pad_select_gpio(measure);
 	gpio_set_direction(measure, GPIO_MODE_DISABLE);
 	gpio_set_pull_mode(measure, GPIO_FLOATING);
 	// - Set "plus" to 1, "minus" to 0
@@ -162,7 +162,7 @@ static void setup_adc(gpio_num_t measure)
 	adc1_config_width(ADC_WIDTH_BIT_10);
 	adc1_config_channel_atten(channel, ADC_ATTEN_DB_11);
 }
-    
+
 static void insert_sort(int16_t array[], uint8_t size) {
 	uint8_t j;
 	int16_t save;
@@ -197,7 +197,7 @@ static void ad_touch_handler(void *arg)
 			samples[i] = adc1_get_raw(gpio_to_adc[xr]);
 		insert_sort(samples, NUMSAMPLES);
 		temp_x = samples[NUMSAMPLES / 2];
-		
+
 	case SET_Y :
 		setup_axis(xl, xr, yd, yu);
 		setup_adc(yd);
@@ -209,7 +209,7 @@ static void ad_touch_handler(void *arg)
 			samples[i] = adc1_get_raw(gpio_to_adc[yd]);
 		insert_sort(samples, NUMSAMPLES);
 		temp_y = samples[NUMSAMPLES / 2];
-		
+
 	case SET_Z1 :
 		setup_axis(yu, xl, yd, xr);
 		setup_adc(yd);
@@ -227,19 +227,19 @@ static void ad_touch_handler(void *arg)
 
 	case READ_Z2:
 		temp_z2 = adc1_get_raw(gpio_to_adc[xr]);
-		
+
 		if (temp_z1 < TOUCHSCREEN_RESISTIVE_PRESS_THRESHOLD) {
 #if CONFIG_LV_TOUCH_XY_SWAP
-			adcX = temp_y; 
-			adcY = temp_x; 
+			adcX = temp_y;
+			adcY = temp_x;
 #else
-			adcX = temp_x; 
-			adcY = temp_y; 
+			adcX = temp_x;
+			adcY = temp_y;
 #endif
 		}
 		else {
-			adcX = -1; 
-			adcY = -1; 
+			adcX = -1;
+			adcY = -1;
 		}
 		state = SET_X;
 		//printf("x: %d   y: %d   z: %d\n", adcX, adcY, temp_z1 - temp_z2);
@@ -296,7 +296,7 @@ static int16_t TouchGetY(void)
  * @param data store the read data here
  * @return false: because no more data to be read
  */
-bool adcraw_read(lv_indev_drv_t * drv, lv_indev_data_t * data)
+bool adcraw_read(lv_indev_t * drv, lv_indev_data_t * data)
 {
 	static int16_t last_x = 0;
 	static int16_t last_y = 0;

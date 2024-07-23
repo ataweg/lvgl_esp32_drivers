@@ -32,13 +32,13 @@ typedef enum _disp_spi_send_flag_t {
     DISP_SPI_RECEIVE            = 0x00000008,
     DISP_SPI_CMD_8              = 0x00000010, /* Reserved */
     DISP_SPI_CMD_16             = 0x00000020, /* Reserved */
-    DISP_SPI_ADDRESS_8          = 0x00000040, 
-    DISP_SPI_ADDRESS_16         = 0x00000080, 
-    DISP_SPI_ADDRESS_24         = 0x00000100, 
-    DISP_SPI_ADDRESS_32         = 0x00000200, 
-    DISP_SPI_MODE_DIO           = 0x00000400, 
-    DISP_SPI_MODE_QIO           = 0x00000800, 
-    DISP_SPI_MODE_DIOQIO_ADDR   = 0x00001000, 
+    DISP_SPI_ADDRESS_8          = 0x00000040, /* Reserved */
+    DISP_SPI_ADDRESS_16         = 0x00000080, /* Reserved */
+    DISP_SPI_ADDRESS_24         = 0x00000100, /* Reserved */
+    DISP_SPI_ADDRESS_32         = 0x00000200, /* Reserved */
+    DISP_SPI_MODE_DIO           = 0x00000400, /* Reserved */
+    DISP_SPI_MODE_QIO           = 0x00000800, /* Reserved */
+    DISP_SPI_MODE_DIOQIO_ADDR   = 0x00001000, /* Reserved */
 	DISP_SPI_VARIABLE_DUMMY		= 0x00002000,
 } disp_spi_send_flag_t;
 

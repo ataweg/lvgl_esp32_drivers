@@ -44,7 +44,7 @@ void inkplate_init(void)
 }
 
 /* Required by LVGL */
-void inkplate_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+void inkplate_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map)
 {
     // Partial update
     display.display(); // Uncomment to disable partial update
@@ -57,9 +57,9 @@ void inkplate_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color
 }
 
 /* Called for each pixel */
-void inkplate_set_px_cb(lv_disp_drv_t * disp_drv, uint8_t* buf,
+void inkplate_set_px_cb(lv_display_t * disp, uint8_t* buf,
     lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
-    lv_color_t color, lv_opa_t opa)
+    uint8_t color, lv_opa_t opa)
 {
     if ((int16_t)color.full >= 1) {
       display.drawPixel((int16_t)x, (int16_t)y, WHITE);

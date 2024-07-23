@@ -386,7 +386,7 @@ static void uc8176_full_update(uint8_t *buf)
     uc8176_sleep();
 }
 
-void uc8176_lv_fb_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+void uc8176_lv_fb_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map)
 {
   size_t len = ((area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1)) / 8;
 
@@ -427,8 +427,8 @@ void uc8176_full_clean(void){
   //uc8176_wait_busy(0);
 }
 
-void uc8176_lv_set_fb_cb(lv_disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
-                           lv_color_t color, lv_opa_t opa)
+void uc8176_lv_set_fb_cb(lv_display_t *disp, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
+                           uint8_t color, lv_opa_t opa)
 {
     uint16_t byte_index = (x >> 3u) + (y * 400);
     uint8_t bit_index = x & 0x07u;
@@ -441,7 +441,7 @@ void uc8176_lv_set_fb_cb(lv_disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_w
     }
 }
 
-void uc8176_lv_rounder_cb(lv_disp_drv_t *disp_drv, lv_area_t *area)
+void uc8176_lv_rounder_cb(lv_display_t *disp, lv_area_t *area)
 {
     // Always send full framebuffer if it's not in partial mode
     area->x1 = 0;

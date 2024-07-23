@@ -43,8 +43,8 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 #define PIN_BUSY            CONFIG_LV_DISP_PIN_BUSY
 #define PIN_BUSY_BIT        ((1ULL << (uint8_t)(CONFIG_LV_DISP_PIN_BUSY)))
 #define EVT_BUSY            (1UL << 0UL)
-#define EPD_WIDTH           LV_HOR_RES
-#define EPD_HEIGHT          LV_VER_RES
+#define EPD_WIDTH           LV_HOR_RES_MAX
+#define EPD_HEIGHT          LV_VER_RES_MAX
 #define EPD_ROW_LEN         (EPD_HEIGHT / 8u)
 #define EPD_PARTIAL_CNT     5;
 
@@ -403,7 +403,7 @@ void jd79653a_lv_rounder_cb(struct _disp_drv_t *disp_drv, lv_area_t *area)
     area->y2 = EPD_HEIGHT - 1;
 }
 
-void jd79653a_lv_fb_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+void jd79653a_lv_fb_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map)
 {
     size_t len = ((area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1)) / 8;
 

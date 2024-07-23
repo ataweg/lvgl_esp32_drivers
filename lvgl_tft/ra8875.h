@@ -24,7 +24,9 @@ extern "C" {
 /*********************
  *      DEFINES
  *********************/
-#define RA8875_RST  CONFIG_LV_DISP_PIN_RST
+#define RA8875_RST      CONFIG_LV_DISP_PIN_RST
+#define RA8875_USE_RST  CONFIG_LV_DISP_USE_RST
+#define RA8875_COLOR_16_SWAP CONFIG_LV_COLOR_16_SWAP
 
 // System & Configuration Registers
 #define RA8875_REG_PWRR   (0x01)     // Power and Display Control Register (PWRR)
@@ -96,9 +98,8 @@ extern "C" {
  **********************/
 
 void ra8875_init(void);
-void ra8875_enable_backlight(bool backlight);
 void ra8875_enable_display(bool enable);
-void ra8875_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * color_map);
+void ra8875_flush(lv_display_t * drv, const lv_area_t * area, uint8_t *color_map);
 
 void ra8875_sleep_in(void);
 void ra8875_sleep_out(void);

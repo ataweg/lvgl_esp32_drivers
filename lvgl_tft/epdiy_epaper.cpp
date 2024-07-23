@@ -61,7 +61,7 @@ void buf_copy_to_framebuffer(EpdRect image_area, const uint8_t *image_data) {
 }
 
 /* Required by LVGL. Sends the color_map to the screen with a partial update  */
-void epdiy_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+void epdiy_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map)
 {
     ++flushcalls;
     uint16_t w = lv_area_get_width(area);
@@ -98,9 +98,9 @@ void epdiy_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_ma
 /* 
  * Called for each pixel. Designed with the idea to fill the buffer directly, not to set each pixel, see LVGL Forum (buf_area_to_framebuffer)
 */
-void epdiy_set_px_cb(lv_disp_drv_t * disp_drv, uint8_t* buf,
+void epdiy_set_px_cb(lv_display_t * disp, uint8_t* buf,
     lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
-    lv_color_t color, lv_opa_t opa)
+    uint8_t color, lv_opa_t opa)
 {
     // Test using RGB232
     int16_t epd_color = 255;

@@ -138,16 +138,16 @@ void ili9163c_init(void)
 	};
 
 	//Initialize non-SPI GPIOs
-	gpio_pad_select_gpio(ILI9163C_DC);
+	esp_rom_gpio_pad_select_gpio(ILI9163C_DC);
 	gpio_set_direction(ILI9163C_DC, GPIO_MODE_OUTPUT);
-	gpio_pad_select_gpio(ILI9163C_RST);
+	esp_rom_gpio_pad_select_gpio(ILI9163C_RST);
 	gpio_set_direction(ILI9163C_RST, GPIO_MODE_OUTPUT);
 
 	//Reset the display
 	gpio_set_level(ILI9163C_RST, 0);
-	vTaskDelay(100 / portTICK_RATE_MS);
+	vTaskDelay(100 / portTICK_PERIOD_MS);
 	gpio_set_level(ILI9163C_RST, 1);
-	vTaskDelay(150 / portTICK_RATE_MS);
+	vTaskDelay(150 / portTICK_PERIOD_MS);
 
 	//Send all the commands
 	uint16_t cmd = 0;
@@ -157,7 +157,7 @@ void ili9163c_init(void)
 		ili9163c_send_data(ili_init_cmds[cmd].data, ili_init_cmds[cmd].databytes & 0x1F);
 		if (ili_init_cmds[cmd].databytes & 0x80)
 		{
-			vTaskDelay(150 / portTICK_RATE_MS);
+			vTaskDelay(150 / portTICK_PERIOD_MS);
 		}
 		cmd++;
 	}
@@ -165,7 +165,7 @@ void ili9163c_init(void)
 	ili9163c_set_orientation(CONFIG_LV_DISPLAY_ORIENTATION);
 }
 
-void ili9163c_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+void ili9163c_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map)
 {
 	uint8_t data[4];
 
@@ -190,6 +190,12 @@ void ili9163c_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color
 
 	uint32_t size = lv_area_get_width(area) * lv_area_get_height(area);
 
+#if defined (ILI9163C_COLOR_16_SWAP)
+    uint16_t *color_p = (uint16_t *)color_map;
+    for (int i = 0; i < size; i++) {
+        color_p[i] = (color_p[i] >> 8) | (color_p[i] << 8);
+    }
+#endif
 	ili9163c_send_color((void *)color_map, size * 2);
 }
 

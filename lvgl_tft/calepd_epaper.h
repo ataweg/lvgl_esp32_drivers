@@ -22,11 +22,11 @@ extern "C" {
 void calepd_init(void);
 
 /* LVGL callbacks */
-void calepd_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map);
+void calepd_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map);
 
 /* Only for monochrome displays. But we use epdiy_set_px also for epapers */
-//void epdiy_rounder(lv_disp_drv_t *disp_drv, lv_area_t *area);
-void calepd_set_px_cb(lv_disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y, lv_color_t color, lv_opa_t opa);
+//void epdiy_rounder(lv_display_t *disp, lv_area_t *area);
+void calepd_set_px_cb(lv_display_t *disp, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y, uint8_t color, lv_opa_t opa);
 
 #ifdef __cplusplus
 } /* extern "C" */

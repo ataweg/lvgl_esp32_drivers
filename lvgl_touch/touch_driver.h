@@ -15,9 +15,9 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
-#include "lvgl.h"
+   #include "lvgl.h"
 #else
-#include "lvgl/lvgl.h"
+   #include "lvgl/lvgl.h"
 #endif
 
 #if defined (CONFIG_LV_TOUCH_CONTROLLER_XPT2046)
@@ -32,17 +32,34 @@ extern "C" {
 #include "FT81x.h"
 #elif defined (CONFIG_LV_TOUCH_CONTROLLER_RA8875)
 #include "ra8875_touch.h"
+#elif defined (CONFIG_LV_TOUCH_CONTROLLER_GT911)
+#include "gt911.h"
+#elif defined (CONFIG_LV_TOUCH_CONTROLLER_CST816T)
+#include "cst816t.h"
 #endif
 
 /*********************
 *      DEFINES
 *********************/
+typedef struct {
+    uint32_t x_start;
+    uint32_t x_end;
+    uint32_t y_start;
+    uint32_t y_end;
+} touch_calibration_t;
 
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
 void touch_driver_init(void);
-bool touch_driver_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
+
+#if LVGL_VERSION_MAJOR >= 8
+void touch_driver_read(lv_indev_t *drv, lv_indev_data_t *data);
+#else
+bool touch_driver_read(lv_indev_t *drv, lv_indev_data_t *data);
+#endif
+
+void touch_driver_set_calibrate(touch_calibration_t *cb);
 
 #ifdef __cplusplus
 } /* extern "C" */

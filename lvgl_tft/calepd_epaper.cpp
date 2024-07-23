@@ -44,7 +44,7 @@ void calepd_init(void)
 }
 
 /* Required by LVGL */
-void calepd_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+void calepd_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map)
 {
     ++flushcalls;
     printf("flush %d x:%d y:%d w:%d h:%d\n", flushcalls,area->x1,area->y1,lv_area_get_width(area),lv_area_get_height(area));
@@ -67,9 +67,9 @@ void calepd_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_m
 }
 
 /* Called for each pixel */
-void calepd_set_px_cb(lv_disp_drv_t * disp_drv, uint8_t* buf,
+void calepd_set_px_cb(lv_display_t * disp, uint8_t* buf,
     lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
-    lv_color_t color, lv_opa_t opa)
+    uint8_t color, lv_opa_t opa)
 {
     //If not drawing anything: Debug to see if this function is called:
     //printf("set_px %d %d\n",(int16_t)x,(int16_t)y);

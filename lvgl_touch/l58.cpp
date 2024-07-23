@@ -49,7 +49,7 @@ void l58_init() {
   * @param  data: Store data here
   * @retval Always false
   */
-bool l58_read(lv_indev_drv_t *drv, lv_indev_data_t *data) {
+bool l58_read(lv_indev_t *drv, lv_indev_data_t *data) {
     point = Touch.loop();
     data->point.x = point.x;
     data->point.y = point.y;

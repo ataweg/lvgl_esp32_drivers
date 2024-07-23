@@ -29,6 +29,7 @@ extern "C"
 #define ILI9163C_DC            CONFIG_LV_DISP_PIN_DC
 #define ILI9163C_RST           CONFIG_LV_DISP_PIN_RST
 #define ILI9163C_INVERT_COLORS CONFIG_LV_INVERT_COLORS
+#define ILI9163C_COLOR_16_SWAP CONFIG_LV_COLOR_16_SWAP
 
 /**********************
  *      TYPEDEFS
@@ -39,7 +40,7 @@ extern "C"
  **********************/
 
 void ili9163c_init(void);
-void ili9163c_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map);
+void ili9163c_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map);
 void ili9163c_sleep_in(void);
 void ili9163c_sleep_out(void);
 

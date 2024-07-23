@@ -44,8 +44,8 @@
 #define PIN_BUSY            CONFIG_LV_DISP_PIN_BUSY
 #define PIN_BUSY_BIT        ((1ULL << (uint8_t)(CONFIG_LV_DISP_PIN_BUSY)))
 #define EVT_BUSY            (1UL << 0UL)
-#define EPD_WIDTH           LV_HOR_RES
-#define EPD_HEIGHT          LV_VER_RES
+#define EPD_WIDTH           LV_HOR_RES_MAX
+#define EPD_HEIGHT          LV_VER_RES_MAX
 #define EPD_ROW_LEN         (EPD_HEIGHT / 8u)
 
 #define BIT_SET(a, b)       ((a) |= (1U << (b)))
@@ -171,8 +171,7 @@ static void uc8151d_full_update(uint8_t *buf)
     uc8151d_panel_init();
 
     uint8_t *buf_ptr = buf;
-    uint8_t old_data[EPD_ROW_LEN]; // = { 0 };
-    memset( old_data, 0, EPD_ROW_LEN*EPD_ROW_LEN*sizeof(uint8_t) );
+    uint8_t old_data[EPD_ROW_LEN] = { 0 };
 
     // Fill old data
     uc8151d_spi_send_cmd(0x10);
@@ -195,7 +194,7 @@ static void uc8151d_full_update(uint8_t *buf)
     uc8151d_sleep();
 }
 
-void uc8151d_lv_fb_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+void uc8151d_lv_fb_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map)
 {
     size_t len = ((area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1)) / 8;
 
@@ -209,7 +208,8 @@ void uc8151d_lv_fb_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *
     ESP_LOGD(TAG, "Ready");
 }
 
-void uc8151d_lv_set_fb_cb(lv_disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y, lv_color_t color, lv_opa_t opa)
+void uc8151d_lv_set_fb_cb(struct _disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
+                           lv_color_t color, lv_opa_t opa)
 {
     uint16_t byte_index = (x >> 3u) + (y * EPD_ROW_LEN);
     uint8_t bit_index = x & 0x07u;
@@ -222,7 +222,7 @@ void uc8151d_lv_set_fb_cb(lv_disp_drv_t *disp_drv, uint8_t *buf, lv_coord_t buf_
     }
 }
 
-void uc8151d_lv_rounder_cb(lv_disp_drv_t *disp_drv, lv_area_t *area)
+void uc8151d_lv_rounder_cb(struct _disp_drv_t *disp_drv, lv_area_t *area)
 {
     // Always send full framebuffer if it's not in partial mode
     area->x1 = 0;
@@ -234,7 +234,6 @@ void uc8151d_lv_rounder_cb(lv_disp_drv_t *disp_drv, lv_area_t *area)
 void uc8151d_init()
 {
     // Initialise event group
-    ESP_LOGE(TAG, "Before initi!");
     uc8151d_evts = xEventGroupCreate();
     if (!uc8151d_evts) {
         ESP_LOGE(TAG, "Failed when initialising event group!");

@@ -1,7 +1,7 @@
 # LVGL ESP32 drivers
 
 # Define sources and include dirs
-COMPONENT_SRCDIRS := . lvgl_tft lvgl_touch
+COMPONENT_SRCDIRS := . lvgl_tft lvgl_touch lvgl_i2c
 COMPONENT_ADD_INCLUDEDIRS := .
 
 # LVGL is supposed to be used as a ESP-IDF component
@@ -17,6 +17,7 @@ $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9481),lvgl_tft/ili9
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9486),lvgl_tft/ili9486.o)
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9488),lvgl_tft/ili9488.o)
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7789),lvgl_tft/st7789.o)
+$(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7789V),lvgl_tft/st7789v.o)
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7735S),lvgl_tft/st7735s.o)
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7796S),lvgl_tft/st7796s.o)
 $(call compile_only_if,$(CONFIG_LV_TFT_DISPLAY_CONTROLLER_HX8357),lvgl_tft/hx8357.o)
@@ -44,6 +45,9 @@ $(call compile_only_if,$(and $(CONFIG_LV_TOUCH_CONTROLLER),$(CONFIG_LV_TOUCH_CON
 $(call compile_only_if,$(and $(CONFIG_LV_TOUCH_CONTROLLER),$(CONFIG_LV_TOUCH_CONTROLLER_ADCRAW)), lvgl_touch/adcraw.o)
 $(call compile_only_if,$(and $(CONFIG_LV_TOUCH_CONTROLLER),$(CONFIG_LV_TOUCH_CONTROLLER_FT81X)), lvgl_touch/FT81x.o)
 $(call compile_only_if,$(and $(CONFIG_LV_TOUCH_CONTROLLER),$(CONFIG_LV_TOUCH_CONTROLLER_RA8875)), lvgl_touch/ra8875_touch.o)
+$(call compile_only_if,$(and $(CONFIG_LV_TOUCH_CONTROLLER),$(CONFIG_LV_TOUCH_CONTROLLER_CST816T)), lvgl_touch/cst816t.o)
 
 $(call compile_only_if,$(and $(CONFIG_LV_TOUCH_CONTROLLER),$(CONFIG_LV_TOUCH_DRIVER_PROTOCOL_SPI)), lvgl_touch/tp_spi.o)
-$(call compile_only_if,$(and $(CONFIG_LV_TOUCH_CONTROLLER),$(CONFIG_LV_TOUCH_DRIVER_PROTOCOL_I2C)), lvgl_touch/tp_i2c.o)
+
+# I2C Manager
+$(call compile_only_if,$(CONFIG_LV_I2C), lvgl_i2c/i2c_manager.o)

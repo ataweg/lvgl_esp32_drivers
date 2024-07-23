@@ -16,6 +16,7 @@ extern "C" {
 
 #include "lvgl_spi_conf.h"
 #include "lvgl_tft/disp_driver.h"
+#include "lvgl_tft/esp_lcd_backlight.h"
 #include "lvgl_touch/touch_driver.h"
 
 /*********************
@@ -34,9 +35,12 @@ extern "C" {
  * When using the mono theme, the display pixels can be represented in one bit,
  * so the buffer size can be divided by 8, e.g. see SSD1306 display size. */
 #if defined (CONFIG_CUSTOM_DISPLAY_BUFFER_SIZE)
+// #define DISP_BUF_SIZE   CONFIG_CUSTOM_DISPLAY_BUFFER_BYTES
 #define DISP_BUF_SIZE   (LV_HOR_RES * LV_VER_RES/* 40 */)/* CONFIG_CUSTOM_DISPLAY_BUFFER_BYTES */
 #else
 #if defined (CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7789)
+#define DISP_BUF_SIZE  (LV_HOR_RES * 40)
+#elif defined (CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7789V)
 #define DISP_BUF_SIZE  (LV_HOR_RES * 40)
 #elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7735S
 #define DISP_BUF_SIZE  (LV_HOR_RES * 40)
@@ -85,6 +89,10 @@ extern "C" {
 #define DISP_BUF_SIZE ((LV_VER_RES * LV_VER_RES) / 8) // 2888 bytes
 #elif defined (CONFIG_LV_TFT_DISPLAY_CONTROLLER_UC8176)
 #define DISP_BUF_SIZE ((LV_VER_RES * LV_VER_RES) / 8) // 2888 bytes
+#elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9163C
+#define DISP_BUF_SIZE (LV_HOR_RES * 40)
+#elif defined (CONFIG_LV_TFT_DISPLAY_CONTROLLER_PCD8544)
+#define DISP_BUF_SIZE  (LV_HOR_RES * (LV_VER_RES / 8))
 #else
 #error "No display controller selected"
 #endif
@@ -98,14 +106,16 @@ extern "C" {
  * GLOBAL PROTOTYPES
  **********************/
 
+void lvgl_i2c_locking(void* leader);
+
 /* Initialize detected SPI and I2C bus and devices */
 void lvgl_driver_init(void);
 
 /* Initialize SPI master  */
 bool lvgl_spi_driver_init(int host, int miso_pin, int mosi_pin, int sclk_pin,
     int max_transfer_sz, int dma_channel, int quadwp_pin, int quadhd_pin);
-/* Initialize I2C master  */
-bool lvgl_i2c_driver_init(int port, int sda_pin, int scl_pin, int speed);
+
+bool lvgl_set_backlight(int brightness_percent);
 
 /**********************
  *      MACROS

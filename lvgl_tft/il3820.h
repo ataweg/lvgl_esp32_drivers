@@ -20,14 +20,15 @@ extern "C"
 
 /* Values for Waveshare 2.9inch e-Paper Module, this values shouldn't be
  * swapped to change display orientation */
-#define EPD_PANEL_WIDTH         LV_HOR_RES   /* 128 */
-#define EPD_PANEL_HEIGHT        LV_VER_RES  /* 296 */
+#define EPD_PANEL_WIDTH         LV_HOR_RES_MAX   /* 128 */
+#define EPD_PANEL_HEIGHT        LV_VER_RES_MAX  /* 296 */
 
 /* 128 = panel width */
 #define IL3820_COLUMNS          (EPD_PANEL_WIDTH / 8)
 
 #define IL3820_DC_PIN           CONFIG_LV_DISP_PIN_DC
 #define IL3820_RST_PIN          CONFIG_LV_DISP_PIN_RST
+#define IL3820_USE_RST          CONFIG_LV_DISP_USE_RST
 #define IL3820_BUSY_PIN         CONFIG_LV_DISP_PIN_BUSY
 #define IL3820_BUSY_LEVEL       1
 
@@ -98,10 +99,10 @@ extern "C"
 #define IL3820_WAIT                20
 
 void il3820_init(void);
-void il3820_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map);
-void il3820_fullflush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map);
-void il3820_rounder(lv_disp_drv_t * disp_drv, lv_area_t *area);
-void il3820_set_px_cb(lv_disp_drv_t * disp_drv, uint8_t * buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y, lv_color_t color, lv_opa_t opa);
+void il3820_flush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map);
+void il3820_fullflush(lv_display_t *drv, const lv_area_t *area, uint8_t *color_map);
+void il3820_rounder(lv_display_t * disp_drv, lv_area_t *area);
+void il3820_set_px_cb(lv_display_t * disp_drv, uint8_t * buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y, lv_color_t color, lv_opa_t opa);
 void il3820_sleep_in(void);
 
 #ifdef __cplusplus

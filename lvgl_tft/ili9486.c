@@ -60,37 +60,25 @@ void ili9486_init(void)
 		{0xE0, {0x0F, 0x1F, 0x1C, 0x0C, 0x0F, 0x08, 0x48, 0x98, 0x37, 0x0A, 0x13, 0x04, 0x11, 0x0D, 0x00}, 15},
 		{0XE1, {0x0F, 0x32, 0x2E, 0x0B, 0x0D, 0x05, 0x47, 0x75, 0x37, 0x06, 0x10, 0x03, 0x24, 0x20, 0x00}, 15},
 		{0x20, {0}, 0},				/* display inversion OFF */
-		{0x36, {0x48}, 1},	
-		{0x29, {0}, 0x80},			/* display on */	
+		{0x36, {0x48}, 1},
+		{0x29, {0}, 0x80},			/* display on */
 		{0x00, {0}, 0xff},
 	};
 
-#if ILI9486_BCKL == 15
-    gpio_config_t io_conf;
-    io_conf.intr_type = GPIO_PIN_INTR_DISABLE;
-    io_conf.mode = GPIO_MODE_OUTPUT;
-    io_conf.pin_bit_mask = GPIO_SEL_15;
-    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-    gpio_config(&io_conf);
-#endif
-
 	//Initialize non-SPI GPIOs
-        gpio_pad_select_gpio(ILI9486_DC);
+    esp_rom_gpio_pad_select_gpio(ILI9486_DC);
 	gpio_set_direction(ILI9486_DC, GPIO_MODE_OUTPUT);
-        gpio_pad_select_gpio(ILI9486_RST);
-	gpio_set_direction(ILI9486_RST, GPIO_MODE_OUTPUT);
 
-#if ILI9486_ENABLE_BACKLIGHT_CONTROL
-    gpio_pad_select_gpio(ILI9486_BCKL);
-    gpio_set_direction(ILI9486_BCKL, GPIO_MODE_OUTPUT);
-#endif
+#if ILI9486_USE_RST
+    esp_rom_gpio_pad_select_gpio(ILI9486_RST);
+	gpio_set_direction(ILI9486_RST, GPIO_MODE_OUTPUT);
 
 	//Reset the display
 	gpio_set_level(ILI9486_RST, 0);
-	vTaskDelay(100 / portTICK_RATE_MS);
+	vTaskDelay(100 / portTICK_PERIOD_MS);
 	gpio_set_level(ILI9486_RST, 1);
-	vTaskDelay(100 / portTICK_RATE_MS);
+	vTaskDelay(100 / portTICK_PERIOD_MS);
+#endif
 
 	ESP_LOGI(TAG, "ILI9486 Initialization.");
 
@@ -100,17 +88,15 @@ void ili9486_init(void)
 		ili9486_send_cmd(ili_init_cmds[cmd].cmd);
 		ili9486_send_data(ili_init_cmds[cmd].data, ili_init_cmds[cmd].databytes&0x1F);
 		if (ili_init_cmds[cmd].databytes & 0x80) {
-			vTaskDelay(100 / portTICK_RATE_MS);
+			vTaskDelay(100 / portTICK_PERIOD_MS);
 		}
 		cmd++;
 	}
 
-	ili9486_enable_backlight(true);
-
-        ili9486_set_orientation(CONFIG_LV_DISPLAY_ORIENTATION);
+    ili9486_set_orientation(CONFIG_LV_DISPLAY_ORIENTATION);
 }
 
-void ili9486_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * color_map)
+void ili9486_flush(lv_display_t * drv, const lv_area_t * area, uint8_t *color_map)
 {
 	uint8_t data[4] = {0};
     uint32_t size = 0;
@@ -135,24 +121,14 @@ void ili9486_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * col
 	ili9486_send_cmd(0x2C);
 
 	size = lv_area_get_width(area) * lv_area_get_height(area);
-	
+
+#if defined (ILI9486_COLOR_16_SWAP)
+    uint16_t *color_p = (uint16_t *)color_map;
+    for (int i = 0; i < size; i++) {
+        color_p[i] = (color_p[i] >> 8) | (color_p[i] << 8);
+    }
+#endif
     ili9486_send_color((void*) color_map, size * 2);
-}
-
-void ili9486_enable_backlight(bool backlight)
-{
-#if ILI9486_ENABLE_BACKLIGHT_CONTROL
-    ESP_LOGI(TAG, "%s backlight.", backlight ? "Enabling" : "Disabling");
-    uint32_t tmp = 0;
-
-#if (ILI9486_BCKL_ACTIVE_LVL==1)
-    tmp = backlight ? 1 : 0;
-#else
-    tmp = backlight ? 0 : 1;
-#endif
-
-    gpio_set_level(ILI9486_BCKL, tmp);
-#endif
 }
 
 /**********************

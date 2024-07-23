@@ -38,16 +38,16 @@ extern "C" {
 	
 /*GetMaxX Macro*/
 #if CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE
-#define GetMaxX()   (LV_HOR_RES - 1)
+#define GetMaxX()   (LV_HOR_RES_MAX - 1)
 #else
-#define GetMaxX()   (LV_VER_RES - 1)
+#define GetMaxX()   (LV_VER_RES_MAX - 1)
 #endif
 
 /*GetMaxY Macro*/
 #if CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE
-#define GetMaxY()   (LV_VER_RES - 1)
+#define GetMaxY()   (LV_VER_RES_MAX - 1)
 #else
-#define GetMaxY()   (LV_HOR_RES - 1)
+#define GetMaxY()   (LV_HOR_RES_MAX - 1)
 #endif
 
 #ifndef CONCAT3
@@ -70,7 +70,7 @@ typedef enum {
 } TOUCH_STATES; 
 
 void adcraw_init(void);
-bool adcraw_read(lv_indev_drv_t * drv, lv_indev_data_t * data);
+bool adcraw_read(lv_indev_t * drv, lv_indev_data_t * data);
 
 #ifdef __cplusplus
 } /* extern "C" */

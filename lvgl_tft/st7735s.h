@@ -23,15 +23,14 @@ extern "C" {
 /*********************
  *      DEFINES
  *********************/
-#define DISP_BUF_SIZE (LV_HOR_RES * 40)
+#define DISP_BUF_SIZE (LV_HOR_RES_MAX * 40)
 
-#define ST7735S_DC   CONFIG_LV_DISP_PIN_DC
-#define ST7735S_RST  CONFIG_LV_DISP_PIN_RST
-
-#define AXP192_SDA   CONFIG_LV_AXP192_PIN_SDA
-#define AXP192_SCL   CONFIG_LV_AXP192_PIN_SCL
+#define ST7735S_DC       CONFIG_LV_DISP_PIN_DC
+#define ST7735S_RST      CONFIG_LV_DISP_PIN_RST
+#define ST7735S_USE_RST  CONFIG_LV_DISP_USE_RST
 
 #define ST7735S_INVERT_COLORS CONFIG_LV_INVERT_COLORS
+#define ST7735S_COLOR_16_SWAP CONFIG_LV_COLOR_16_SWAP
 
 // Defines are taken from
 //      https://raw.githubusercontent.com/m5stack/M5StickC/master/src/utility/ST7735_Defines.h
@@ -132,8 +131,7 @@ extern "C" {
  **********************/
 
 void st7735s_init(void);
-void st7735s_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * color_map);
-void st7735s_enable_backlight(bool backlight);
+void st7735s_flush(lv_display_t * drv, const lv_area_t * area, uint8_t *color_map);
 void st7735s_sleep_in(void);
 void st7735s_sleep_out(void);
 

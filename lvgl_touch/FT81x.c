@@ -49,7 +49,7 @@
  * @param data store the read data here
  * @return false: because no more data to be read
  */
-bool FT81x_read(lv_indev_drv_t * drv, lv_indev_data_t * data)
+bool FT81x_read(lv_indev_t * drv, lv_indev_data_t * data)
 {
     static int16_t last_x = 0;
     static int16_t last_y = 0;
@@ -60,7 +60,7 @@ bool FT81x_read(lv_indev_drv_t * drv, lv_indev_data_t * data)
 	uint16_t X = XY >> 16;
 
 	// is it not touched (or invalid because of calibration range)
-	if(X == 0x8000 || Y == 0x8000 || X > LV_HOR_RES || Y > LV_VER_RES)
+	if(X == 0x8000 || Y == 0x8000 || X > LV_HOR_RES_MAX || Y > LV_VER_RES_MAX)
 	{
 		touched = false;
 		X = last_x;

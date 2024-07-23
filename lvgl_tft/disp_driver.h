@@ -20,22 +20,16 @@ extern "C" {
 
 #if defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9341
 #include "ili9341.h"
-#elif defined CONFIG_LV_EPAPER_EPDIY_DISPLAY_CONTROLLER
-#include "lvgl_tft/epdiy_epaper.h"
-#elif defined CONFIG_LV_EPAPER_CALEPD_DISPLAY_CONTROLLER
-#include "lvgl_tft/calepd_epaper.h"
-#elif defined CONFIG_LV_EPAPER_INKPLATE_DISPLAY_CONTROLLER
-#include "lvgl_tft/inkplate.h"
 #elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9481
 #include "ili9481.h"
 #elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9488
 #include "ili9488.h"
 #elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7789
 #include "st7789.h"
+#elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7789V
+#include "st7789v.h"
 #elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7796S
 #include "st7796s.h"
-#elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7796_PARALLEL
-#include "st7796_parallel.h"
 #elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ST7735S
 #include "st7735s.h"
 #elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_HX8357
@@ -58,8 +52,10 @@ extern "C" {
 #include "jd79653a.h"
 #elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_UC8151D
 #include "uc8151d.h"
-#elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_UC8176
-#include "uc8176.h"
+#elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_ILI9163C
+#include "ili9163c.h"
+#elif defined CONFIG_LV_TFT_DISPLAY_CONTROLLER_PCD8544
+#include "pcd8544.h"
 #endif
 
 /*********************
@@ -75,16 +71,19 @@ extern "C" {
  **********************/
 
 /* Initialize display */
-void disp_driver_init(void);
+void *disp_driver_init(void);
 
 /* Display flush callback */
-void disp_driver_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * color_map);
+void disp_driver_flush(lv_display_t * drv, const lv_area_t * area, uint8_t *color_map);
+
+/* Display set on/off */
+void disp_set_on(char on);
 
 /* Display rounder callback, used with monochrome dispays */
-void disp_driver_rounder(lv_disp_drv_t * disp_drv, lv_area_t * area);
+void disp_driver_rounder(lv_display_t * disp_drv, lv_area_t * area);
 
 /* Display set_px callback, used with monochrome dispays */
-void disp_driver_set_px(lv_disp_drv_t * disp_drv, uint8_t * buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
+void disp_driver_set_px(lv_display_t * disp_drv, uint8_t * buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
     lv_color_t color, lv_opa_t opa);
 
 /**********************

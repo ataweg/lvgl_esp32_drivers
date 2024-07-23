@@ -57,16 +57,16 @@ void pcd8544_init(void){
     // TODO: orientation
 
     // Initialize non-SPI GPIOs
-    gpio_pad_select_gpio(PCD8544_DC);
+    esp_rom_gpio_pad_select_gpio(PCD8544_DC);
     gpio_set_direction(PCD8544_DC, GPIO_MODE_OUTPUT);
-    gpio_pad_select_gpio(PCD8544_RST);
+    esp_rom_gpio_pad_select_gpio(PCD8544_RST);
     gpio_set_direction(PCD8544_RST, GPIO_MODE_OUTPUT);
 
     // Reset the display
     gpio_set_level(PCD8544_RST, 0);
-    vTaskDelay(100 / portTICK_RATE_MS);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
     gpio_set_level(PCD8544_RST, 1);
-    vTaskDelay(100 / portTICK_RATE_MS);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
 
     pcd8544_send_cmd(0x21);     /* activate chip (PD=0), horizontal increment (V=0), enter extended command set (H=1) */
     pcd8544_send_cmd(0x06);     /* temp. control: b10 = 2  */
@@ -85,7 +85,7 @@ void pcd8544_set_contrast (uint8_t contrast){
     pcd8544_send_cmd(0x80 | contrast);     /* medium Vop = Contrast */
 }
 
-void pcd8544_rounder(lv_disp_drv_t * disp_drv, lv_area_t *area){
+void pcd8544_rounder(lv_display_t * disp_drv, lv_area_t *area){
     uint8_t hor_max = disp_drv->hor_res;
     uint8_t ver_max = disp_drv->ver_res;
 
@@ -95,7 +95,7 @@ void pcd8544_rounder(lv_disp_drv_t * disp_drv, lv_area_t *area){
     area->y2 = ver_max - 1;
 }
 
-void pcd8544_set_px_cb(lv_disp_drv_t * disp_drv, uint8_t * buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
+void pcd8544_set_px_cb(lv_display_t * disp_drv, uint8_t * buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y,
                        lv_color_t color, lv_opa_t opa){
 
     uint8_t set = (color.full == 0) && (LV_OPA_TRANSP != opa);
@@ -110,7 +110,7 @@ void pcd8544_set_px_cb(lv_disp_drv_t * disp_drv, uint8_t * buf, lv_coord_t buf_w
     }
 }
 
-void pcd8544_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_map){
+void pcd8544_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t *color_map){
 
     pcd8544_send_cmd(0x20);     /* activate chip (PD=0), horizontal increment (V=0), enter extended command set (H=0) */
 
